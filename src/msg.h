@@ -8,8 +8,8 @@
 
 struct message {
 	uint32_t timestamp;
-	uint32_t width;		// varies
-	uint32_t height;	// normally 80
+	uint32_t width;		// normally 80
+	uint32_t height;	// normally 25, may vary
 	//char **image;	// dimension is width x height
 	char *image;	// dimension is width x height
 
