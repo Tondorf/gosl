@@ -109,7 +109,7 @@ int run_server(const struct prog_info *pinfo) {
 // lauschangriff:
 // einfach mal in den äther horchen und alle messages rausnehmen die wo da gibt.
 //
-int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct message *) ) {
+int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct message *, const struct prog_info *) ) {
 
 	struct addrinfo hints, *servinfo;
 	char portbuf[6];
@@ -171,7 +171,7 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 		struct message *msg = (struct message *)malloc(sizeof(struct message));
 		deserialize(msg, buf);
 
-		framecallback(msg);
+		framecallback(msg, pinfo);
 
 	} while (strncmp(buf, "exit", 10000));
 	

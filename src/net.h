@@ -8,6 +8,6 @@
 
 void *get_in_addr(struct sockaddr *sa);
 int run_server(const struct prog_info *pinfo);
-int run_client(const struct prog_info *pinfo,void(*framecallback)(const struct message *));
+int run_client(const struct prog_info *pinfo,void(*framecallback)(const struct message *, const struct prog_info *));
 
 #endif

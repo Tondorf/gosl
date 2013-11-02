@@ -26,6 +26,7 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 		printf(        " -t <fps>   when in server mode: update <fps> times\n"); 
 		printf(        "            per second. Valid range: 2 - 99\n");
 		printf(        "            no use in client mode\n");
+		printf(        " -v          \n");
 		printf("\n\n");
 		return -1;
 	}

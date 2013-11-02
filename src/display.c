@@ -43,7 +43,7 @@ static void print_current_image(const struct message* msg, int start, int end) {
 
 }
 
-void callback(const struct message *msg) {
+void callback(const struct message *msg, const struct prog_info *pinfo) {
 	printf("in callback, tst=%d\n", msg->timestamp);
 	
 	int start;
