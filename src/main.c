@@ -93,6 +93,7 @@ int main(int argc, char **argv) {
 			ret = run_server(&prog_info);
 		} else {
 			printf("running in CLIENT mode, using client number %d\n", prog_info.client_offset);
+			signal(SIGINT,&cleanup_display);
 			ret = run_client(&prog_info, callback);
 		}
 
