@@ -67,7 +67,7 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 				return -6;
 			}
 			pinfo->fps = (int)strtol(argv[++i], NULL, 10);
-			if (pinfo->fps <= 1 || 50 <= pinfo->fps) {
+			if (pinfo->fps <= 1 || 100 <= pinfo->fps) {
 				printf("fps invalid!\n");
 				return -7;
 			}

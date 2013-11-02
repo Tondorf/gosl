@@ -43,35 +43,45 @@ static void print_current_image(const struct message* msg, int start, int end) {
 
 }
 
+void prntscreen(const struct message *msg, const struct prog_info *pinfo);
+
 void callback(const struct message *msg, const struct prog_info *pinfo) {
-	printf("in callback, tst=%d\n", msg->timestamp);
+//	printf("in callback, tst=%d\n", msg->timestamp);
 	
 	// calculate the actual offset to use
-	int start = msg->timestamp % msg->width  +  pinfo->client_offset;
+	//int start = msg->timestamp % msg->width  +  pinfo->client_offset;
 
-	print_current_image(msg, start, start+80);
-	
+	//print_current_image(msg, start, start+80);
+	prntscreen(msg, pinfo);
 }
 
 
-
+//int init = 0;
+//int rows; 
+//int cols;
 void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	static int init = 0;
 	static int rows;
 	static int cols;
 	if (!init) {
+//		printf("init start\n");
 		initscr();
 		getmaxyx(stdscr, rows, cols);
 
 		init = 1;
+//		printf("init end\n");
 	}
 
-	int frame = msg->frame;
+	int frame = msg->timestamp;
 	int right = pinfo->client_offset;
 	int left = right + cols;
 
-	int pos = frame + off;
-
+//	printf("loop\n");
+	for (int y=0; y<10; y++) { // y<msg->height; y++) {
+   		for (int x=left-frame; x<cols; x++) {
+			mvaddch(y, x, ('0' + x-(left-frame)));
+		}
+	}
 
 	refresh();
 }
