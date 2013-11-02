@@ -23,7 +23,8 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 		printf(        " -c <num>   run in client mode\n");
 		printf(        "            num is the column offset to use.\n");
 		printf(        " -p <port>  use the specified port\n");
-		printf(        " -t <fps>   when in server mode: update <fps> times per second\n");
+		printf(        " -t <fps>   when in server mode: update <fps> times\n"); 
+		printf(        "            per second. Valid range: 2 - 99\n");
 		printf(        "            no use in client mode\n");
 		printf("\n\n");
 		return -1;
@@ -65,7 +66,7 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 				return -6;
 			}
 			pinfo->fps = (int)strtol(argv[++i], NULL, 10);
-			if (pinfo->fps <= 0 || 50 <= pinfo->fps) {
+			if (pinfo->fps <= 1 || 50 <= pinfo->fps) {
 				printf("fps invalid!\n");
 				return -7;
 			}

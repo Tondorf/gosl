@@ -64,7 +64,7 @@ int run_server(const struct prog_info *pinfo) {
 
 	struct timespec tim;
 	tim.tv_sec = 0;
-	tim.tv_nsec = 50000000;
+	tim.tv_nsec = 1000000000 / pinfo->fps;
 
 	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
