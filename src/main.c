@@ -13,19 +13,19 @@
 
 int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	pinfo->mode = MODE_SERVER;
-	pinfo->client_num = 1;
+	pinfo->client_offset = 1;
 	pinfo->port = 4711;
 	pinfo->fps = 10;
 
 	if (argc <= 1) {
 		printf("usage: %s [-s|-c <off>] [-p <port>] [-t <fps>]\n", argv[0]);
 		printf("where:\n -s         run in server mode\n");
-		printf(        " -c <num>   run in client mode\n");
-		printf(        "            num is the column offset to use.\n");
+		printf(        " -c <off>   run in client mode\n");
+		printf(        "            off is the column offset to use.\n");
 		printf(        " -p <port>  use the specified port\n");
 		printf(        " -t <fps>   when in server mode: update <fps> times\n"); 
 		printf(        "            per second. Valid range: 2 - 99\n");
-		printf(        "            no use in client mode\n");
+		printf(        "            ignored in client mode\n");
 		printf(        " -v          \n");
 		printf("\n\n");
 		return -1;
@@ -42,8 +42,8 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 				printf("client number not specified\n");
 				return -2;
 			}
-			pinfo->client_num = (int)strtol(argv[++i], NULL, 10);
-			if (pinfo->client_num <= 0) {
+			pinfo->client_offset = (int)strtol(argv[++i], NULL, 10);
+			if (pinfo->client_offset <= 0) {
 				printf("invalid client number!\n");
 				return -3;
 			}
@@ -89,10 +89,10 @@ int main(int argc, char **argv) {
 			
 		printf("port: %d\n", prog_info.port);
 		if (prog_info.mode == MODE_SERVER) {
-			printf("runnin in SERVER mode @%d FPS\n", prog_info.fps);
+			printf("running in SERVER mode @%d FPS\n", prog_info.fps);
 			ret = run_server(&prog_info);
 		} else {
-			printf("running in CLIENT mode, using client number %d\n", prog_info.client_num);
+			printf("running in CLIENT mode, using client number %d\n", prog_info.client_offset);
 			ret = run_client(&prog_info, callback);
 		}
 
