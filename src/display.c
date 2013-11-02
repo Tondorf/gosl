@@ -63,6 +63,9 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	static int init = 0;
 	static int rows;
 	static int cols;
+	static char *img = NULL;
+	static int w;
+	static int h;
 	if (!init) {
 //		printf("init start\n");
 		initscr();
@@ -71,15 +74,26 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 		init = 1;
 //		printf("init end\n");
 	}
+	if (!img && msg->image) {
+		img = msg->image;
+		w = msg->width;
+		h = msg->height;
+	}
+
+	if (!img)
+		return;
 
 	int frame = msg->timestamp;
 	int right = pinfo->client_offset;
 	int left = right + cols;
 
 //	printf("loop\n");
-	for (int y=0; y<50; y++) { // y<msg->height; y++) {
+	int rowoffset = (rows-h)/2;
+	int coloffset = left-frame;
+	for (int y=0; y<h; y++) { // y<msg->height; y++) {
    		for (int x=left-frame; x<cols; x++) {
-			mvaddch(y, x, ('0' + x-(left-frame)+y));
+			
+			mvaddch(y + rowoffset, x, ('0' + x-(left-frame)+y));
 		}
 	}
 

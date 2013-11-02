@@ -2,13 +2,15 @@
 
 char *readImage(const char* filename, int *cols, int *rows) {
 	
+	printf("fopen\n");
 	FILE *f = fopen(filename, "r");
-
+	printf("ok\n");
+	
 	*cols = 0;
 	*rows = 0;
 	char *linebuf = (char *)malloc(LINELEN);
 	char *ret = NULL;
-	if (!f) {
+	if (f) {
 		while (fgets(linebuf, LINELEN, f)) {
 			int len = strlen(linebuf);
 			*cols = len>*cols?len:*cols;
