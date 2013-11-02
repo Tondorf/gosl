@@ -60,7 +60,7 @@ void append_space(Buffer * b, int n) {
 	b->size += n;
 	b->data = realloc(b->data, b->size);
 }
-
+/*
 void serialize_int(int x, Buffer * b) {
 	// htonl :: uint32_t -> uint32_t -- converts the parameter from host byte order to network byte order
 	//x = htonl(x);
@@ -105,6 +105,6 @@ int main() {
 	printf("buf: size:%d data:%p\n", buf->size, buf->data);
 
 }
-
+*/
 
 
