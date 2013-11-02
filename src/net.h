@@ -4,7 +4,7 @@
 #include <sys/socket.h>	// struct sockaddr
 #include "misc.h"		// prog_info
 #include "msg.h"		// message serialization
-#include "display.h"	// callback 
+#include "display.h"	// callback
 
 void *get_in_addr(struct sockaddr *sa);
 int run_server(const struct prog_info *pinfo);

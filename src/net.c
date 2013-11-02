@@ -152,7 +152,7 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 	printf("check!\n");
 
 	freeaddrinfo(servinfo); // free whole list
- 
+
 	struct sockaddr_storage their_addr;
 	socklen_t addr_len = sizeof their_addr;
 	int numbytes;

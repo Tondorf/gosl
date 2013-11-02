@@ -57,7 +57,7 @@ void callback(const struct message *msg, const struct prog_info *pinfo) {
 
 
 //int init = 0;
-//int rows; 
+//int rows;
 //int cols;
 void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	static int init = 0;
