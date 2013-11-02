@@ -44,7 +44,10 @@ void serialize_int(int x, Buffer * b) {
 
 	memcpy(((char *)b->data) + b->next, &x, sizeof(int));
 	b->next += sizeof(int);
+
 }
+
+void struct
 
 //serialize_string
 //serialize_message

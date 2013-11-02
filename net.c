@@ -38,7 +38,7 @@ int run_server(const struct prog_info *pinfo) {
 	hints.ai_socktype = SOCK_DGRAM;
 
 	sprintf(portbuf, "%d", pinfo->port);
-	if ((ret=getaddrinfo("0.0.0.0", portbuf, &hints, &servinfo)) != 0) {
+	if ((ret=getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
 	        return 1;
 	}
@@ -60,6 +60,12 @@ int run_server(const struct prog_info *pinfo) {
 	struct timespec tim;
 	tim.tv_sec = 0;
 	tim.tv_nsec = 500000000;
+
+ 	int broadcastPermission = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
+		fprintf(stderr, "setsockopt error");
+		exit(1);
+	}
 
 	for (;;) {
 		printf("sending...\n");
@@ -83,8 +89,6 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 	struct addrinfo hints, *servinfo;
 	char portbuf[6];
 
-	//framecallback(123);
-
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;      // IPv4
 	hints.ai_socktype = SOCK_DGRAM; // UDP
@@ -104,13 +108,6 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 	int sockfd;
 	char s[INET6_ADDRSTRLEN];
 	for (info = servinfo; info != NULL; info = info->ai_next) {
-/*		if (info->ai_addr) {
-			struct sockaddr_in* p = (struct sockaddr_in *)info->ai_addr;
-			inet_ntop(p->sin_family, &p->sin_addr, s, INET6_ADDRSTRLEN); 
-			printf("  %d: %s\n", info->ai_addr->sa_family, s);
-		}
-*/
-
 		if ((sockfd = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == -1) {
 			perror("sock");
 			continue; 
@@ -141,17 +138,15 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 		    exit(1);
 		}
 		
-		printf("listener: got packet from %s\n", inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
-		printf("listener: packet is %d bytes long\n", numbytes);
+		//printf("listener: got packet from %s\n", inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
+		//printf("listener: packet is %d bytes long\n", numbytes);
 		buf[numbytes] = '\0';
-		printf("listener: packet contains \"%s\"\n", buf);
+		//printf("listener: packet contains \"%s\"\n", buf);
 
 		framecallback(123);
 
 	} while (strncmp(buf, "exit", 10000));
 	
-
-
 	close(sockfd);
 	
 	return 0;

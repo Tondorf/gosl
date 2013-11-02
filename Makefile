@@ -13,7 +13,7 @@ all:  bin/netsl
 
 bin/netsl: misc.h main.c net.c
 	mkdir -pv bin
-	gcc -o bin/main main.c
+	gcc -o bin/netsl main.c
 
 clean:
 	rm -rf bin
