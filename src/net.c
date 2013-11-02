@@ -15,9 +15,6 @@
 
 #include "misc.h"
 
-#define PORT(p) PORTSTR(p)
-#define PORTSTR(p) #p
-
 void *get_in_addr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET) {
