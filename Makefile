@@ -1,6 +1,5 @@
 
-CFLAGS=-g -Wall -Wextra
-# -std=c99 # c99 breaks some of your code xD
+CFLAGS=-g -Wall -Wextra -std=gnu99 
 
 
 all: bin/netsl

@@ -106,7 +106,7 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 	
 	struct addrinfo *info;
 	int sockfd;
-	char s[INET6_ADDRSTRLEN];
+	//char s[INET6_ADDRSTRLEN];
 	for (info = servinfo; info != NULL; info = info->ai_next) {
 		if ((sockfd = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == -1) {
 			perror("sock");
