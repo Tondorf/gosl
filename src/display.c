@@ -53,3 +53,25 @@ void callback(const struct message *msg, const struct prog_info *pinfo) {
 	
 }
 
+
+
+void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
+	static int init = 0;
+	static int rows;
+	static int cols;
+	if (!init) {
+		initscr();
+		getmaxyx(stdscr, rows, cols);
+
+		init = 1;
+	}
+
+	int frame = msg->frame;
+	int right = pinfo->client_offset;
+	int left = right + cols;
+
+	int pos = frame + off;
+
+
+	refresh();
+}
