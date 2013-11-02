@@ -13,6 +13,6 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	-$(RM) -rf *.o bin
+	rm -rf *.o bin
 
 
