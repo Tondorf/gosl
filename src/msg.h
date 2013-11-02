@@ -1,3 +1,5 @@
+#ifndef __MSG
+#  define __MSG
 
 //typedef struct Buffer {
 //	int size;
@@ -23,3 +25,5 @@ void serialize_int(int x,Buffer *b);
 void serialize_string(char *str,Buffer *b);
 void serialize_message(struct message *msg,Buffer *b);
 */
+
+#endif

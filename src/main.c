@@ -5,6 +5,7 @@
 
 #include "misc.h"
 #include "net.h"
+#include "display.h"
 
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
@@ -57,9 +58,6 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	return 0;
 }
 
-void callback(long tst) {
-	printf("in callback, tst=%ld\n", tst);
-}
 
 int main(int argc, char **argv) {
 

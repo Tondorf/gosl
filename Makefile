@@ -3,7 +3,7 @@ CFLAGS=-g -Wall -Wextra -std=gnu99
 BIN_DIR=bin
 SRC_DIR=src
 TARGET=$(BIN_DIR)/netsl
-OBJECTS=$(BIN_DIR)/main.o $(BIN_DIR)/msg.o $(BIN_DIR)/net.o
+OBJECTS=$(BIN_DIR)/main.o $(BIN_DIR)/msg.o $(BIN_DIR)/net.o $(BIN_DIR)/display.o
 
 all: $(BIN_DIR) $(TARGET) 
 
