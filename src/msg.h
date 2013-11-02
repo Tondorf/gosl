@@ -1,5 +1,5 @@
 #ifndef __MSG
-#  define __MSG
+#define __MSG
 
 #include <stdint.h>
 
@@ -34,3 +34,4 @@ void serialize_message(struct message *msg,Buffer *b);
 */
 
 #endif
+

@@ -22,11 +22,11 @@
 //
 void *get_in_addr(struct sockaddr *sa)
 {
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
+	if (sa->sa_family == AF_INET) {
+		return &(((struct sockaddr_in*)sa)->sin_addr);
+	}
 
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
 
@@ -46,14 +46,14 @@ int run_server(const struct prog_info *pinfo) {
 	sprintf(portbuf, "%d", pinfo->port);
 	if ((ret=getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
-	        return 1;
+			return 1;
 	}
 
 	for(p = servinfo; p != NULL; p = p->ai_next) {
 	 	if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-	    	perror("talker: socket");
-    	    continue;
-        }
+			perror("talker: socket");
+			continue;
+		}
 		break;
 	}
 
@@ -68,7 +68,7 @@ int run_server(const struct prog_info *pinfo) {
 
 	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
+	if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
 		fprintf(stderr, "setsockopt error");
 		exit(1);
 	}
@@ -115,8 +115,8 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 	char portbuf[6];
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_INET;      // IPv4
-	hints.ai_socktype = SOCK_DGRAM; // UDP
+	hints.ai_family = AF_INET;			// IPv4
+	hints.ai_socktype = SOCK_DGRAM;		// UDP
 	hints.ai_flags = AI_PASSIVE;
 
 	sprintf(portbuf, "%d", pinfo->port);
@@ -159,8 +159,8 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 	char buf[10000];
 	do {
 		if ((numbytes = recvfrom(sockfd, buf, 9999 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
-	    	perror("recvfrom");
-		    exit(1);
+			perror("recvfrom");
+			exit(1);
 		}
 		
 		//printf("listener: got packet from %s\n", inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
