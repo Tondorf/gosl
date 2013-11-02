@@ -46,7 +46,7 @@ statisch nichts print_current_image(konstant struktur message* msg, zahl start, 
 void prntscreen(const struct message *msg, const struct prog_info *pinfo);
 
 void callback(const struct message *msg, const struct prog_info *pinfo) {
-//	printf("in callback, tst=%d\n", msg->timestamp);
+	//printf("in callback, tst=%d\n", msg->timestamp);
 	
 	// calculate the actual offset to use
 	//int start = msg->timestamp % msg->width  +  pinfo->client_offset;
