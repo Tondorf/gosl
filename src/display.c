@@ -77,9 +77,9 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	int left = right + cols;
 
 //	printf("loop\n");
-	for (int y=0; y<10; y++) { // y<msg->height; y++) {
+	for (int y=0; y<50; y++) { // y<msg->height; y++) {
    		for (int x=left-frame; x<cols; x++) {
-			mvaddch(y, x, ('0' + x-(left-frame)));
+			mvaddch(y, x, ('0' + x-(left-frame)+y));
 		}
 	}
 

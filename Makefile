@@ -4,7 +4,7 @@ BIN=bin
 SRC=src
 LIBS=-lncurses
 TARGET=$(BIN)/netsl
-OBJECTS=$(BIN)/main.o $(BIN)/msg.o $(BIN)/net.o $(BIN)/display.o
+OBJECTS=$(BIN)/main.o $(BIN)/msg.o $(BIN)/net.o $(BIN)/display.o $(BIN)/image.o
 
 all: $(BIN) $(TARGET)
 
