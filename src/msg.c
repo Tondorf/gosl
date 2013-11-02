@@ -5,52 +5,29 @@
 #include <arpa/inet.h> // htonl
 #include "msg.h"
 
-#if INTERFACE
-
-#define INITIAL_SIZE 32
-
-struct Buffer {
-	int size;
-	void *data;
-};
-
-struct message {
-	uint32_t timestamp;
-	uint32_t width;		// varies
-	uint32_t height;		// normally 80
-	//char **image;	// dimension is width x height
-	char *image;	// dimension is width x height
-};
-
-
-#endif
-
-
 int getBufferSize(struct message *msg) {
-	int ret;
-		ret = 4 + 4 + 4 + msg->width * msg->height;
-	return ret;
+	return 3*sizeof(uint32_t) + msg->width * msg->height;
 }
 
 void serialize (char *buf, struct message *msg) {
 	memcpy(&buf[0], &msg->timestamp, 4);
 	memcpy(&buf[4], &msg->width, 4);
 	memcpy(&buf[8], &msg->height, 4);
-	memcpy(&buf[12], msg->image, msg->width*msg->height);
+	memcpy(&buf[12], msg->image, msg->width * msg->height);
 }
 
 void deserialize (struct message *msg, const char *buf) {
 	memcpy(&msg->timestamp, &buf[0], 4);
 	memcpy(&msg->width, &buf[4], 4);
 	memcpy(&msg->height, &buf[8], 4);
-	msg->image = (char *)malloc(msg->width*msg->height);
-	memcpy(msg->image, &buf[12], msg->width*msg->height);
+	msg->image = (char*) malloc(msg->width * msg->height);
+	memcpy(msg->image, &buf[12], msg->width * msg->height);
 }
 
 struct Buffer *new_buffer() {
 	struct Buffer *b = malloc(sizeof(Buffer));
 
-	b->data = malloc(INITIAL_SIZE);
+	b->data = malloc(0);
 	b->size = 0;
 
 	return b;
@@ -60,7 +37,7 @@ void append_space(Buffer * b, int n) {
 	b->size += n;
 	b->data = realloc(b->data, b->size);
 }
-/*
+
 void serialize_int(int x, Buffer * b) {
 	// htonl :: uint32_t -> uint32_t -- converts the parameter from host byte order to network byte order
 	//x = htonl(x);
@@ -96,7 +73,7 @@ void serialize_message(struct message *msg, Buffer *b) {
 		serialize_string(msg->image[i], b);
 }
 
-
+/*
 int main() {
 
 	Buffer *buf = new_buffer();
