@@ -13,7 +13,7 @@ void serialize (char *buf, struct message *msg) {
 	memcpy(&buf[0], &msg->timestamp, 4);
 	memcpy(&buf[4], &msg->width, 4);
 	memcpy(&buf[8], &msg->height, 4);
-	if (msg->width * msg->height) 
+	if (msg->width * msg->height)
 		memcpy(&buf[12], msg->image, msg->width * msg->height);
 }
 
@@ -89,5 +89,4 @@ int main() {
 
 }
 */
-
 
