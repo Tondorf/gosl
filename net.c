@@ -28,8 +28,9 @@ void *get_in_addr(struct sockaddr *sa)
 }
 
 int run_server(const struct prog_info *pinfo) {
-	struct addrinfo hints, *servinfo;
+	struct addrinfo hints, *servinfo, *p;
 	int ret;
+	int sockfd;
 
 	char portbuf[6];
 	memset(&hints, 0, sizeof(hints));
@@ -38,18 +39,51 @@ int run_server(const struct prog_info *pinfo) {
 
 	sprintf(portbuf, "%d", pinfo->port);
 	if ((ret=getaddrinfo("0.0.0.0", portbuf, &hints, &servinfo)) != 0) {
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
 	        return 1;
 	}
 // ...
 
+	 for(p = servinfo; p != NULL; p = p->ai_next) {
+	 	if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+	    	perror("talker: socket");
+    	    continue;
+        }
+		break;
+	}
+
+	if (p == NULL) {
+		fprintf(stderr, "talker: failed to bind socket\n");
+		return 2;
+	}
+
+	struct timespec tim;
+	tim.tv_sec = 0;
+	tim.tv_nsec = 500000000;
+
+	for (;;) {
+		printf("sending...\n");
+		int numbytes;
+		if ((numbytes = sendto(sockfd, "bla", 3, 0, p->ai_addr, p->ai_addrlen)) == -1) {
+			perror("error sending");
+			return -44;
+		}
+		nanosleep(&tim, NULL);
+	}
+
+	freeaddrinfo(servinfo);
+
+	close(sockfd);
+
 	return 0;
 }
 
-int run_client(const struct prog_info *pinfo) {
+int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 
 	struct addrinfo hints, *servinfo;
 	char portbuf[6];
+
+	//framecallback(123);
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;      // IPv4
@@ -111,7 +145,11 @@ int run_client(const struct prog_info *pinfo) {
 		printf("listener: packet is %d bytes long\n", numbytes);
 		buf[numbytes] = '\0';
 		printf("listener: packet contains \"%s\"\n", buf);
+
+		framecallback(123);
+
 	} while (strncmp(buf, "exit", 10000));
+	
 
 
 	close(sockfd);

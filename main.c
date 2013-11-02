@@ -57,6 +57,10 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	return 0;
 }
 
+void callback(long tst) {
+	printf("in callback, tst=%ld\n", tst);
+}
+
 int main(int argc, char **argv) {
 
 	int ret;
@@ -69,6 +73,7 @@ int main(int argc, char **argv) {
 		} else {
 			printf("running in CLIENT mode, using client number %d\n", prog_info.client_num);
 			// ...
+			ret = run_client(&prog_info, callback);
 		}
 
 	}
