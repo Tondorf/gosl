@@ -61,6 +61,10 @@ void serialize_string(char *str, Buffer *b) {
 
 }
 
-//serialize_message
-
+void serialize_message(struct message *msg, Buffer *b) {
+	serialize_int(msg->timestamp, b); // does this also work for long?
+	serialize_int(msg->width, b);
+	serialize_int(msg->heigth, b);
+	serialize_string(msg->image, b);
+}
 
