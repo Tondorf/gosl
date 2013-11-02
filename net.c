@@ -42,9 +42,8 @@ int run_server(const struct prog_info *pinfo) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
 	        return 1;
 	}
-// ...
 
-	 for(p = servinfo; p != NULL; p = p->ai_next) {
+	for(p = servinfo; p != NULL; p = p->ai_next) {
 	 	if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
 	    	perror("talker: socket");
     	    continue;

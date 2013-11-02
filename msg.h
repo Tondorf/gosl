@@ -10,7 +10,7 @@ struct message {
 	long timestamp;
 	int width;		// varies
 	int height;		// normally 80
-	char **image;	// dimension is width x height
+	char *image;	// dimension is width x height
 };
 struct Buffer {
 	int size;
