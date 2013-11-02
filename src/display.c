@@ -24,17 +24,16 @@ void cleanup_display() {
 	char *image;		// dimension is width x height
 */
 void print_current_image(message* msg, int start, int end) {
+	// end is ignored and 80 is used, should be considered later
 
-	move(0,0);
-	char *pic = msg->img;
+	move(0,0); // start in the upper left corner
+	char *pic = msg->img; // get a ptr to the actual image
 	
-	for (int row=0; row < 25; row++) {
-		
+	for (int row=0; row < 25; row++) { // iterate rows
 		char *line = (char*) malloc(81);
-		strcpy(line, strtok(pic, '\n'));
-		line[81] = '\0';
-		printw("%s", line);
-		
+		strcpy(line, strtok(pic, '\n')); // get a line
+		line[80] = '\0'; // terminate
+		printw("%s", line+start);
 	}
 	
 	refresh(); // refresh the screen
