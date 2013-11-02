@@ -1,25 +1,23 @@
 
 CFLAGS=-g -Wall -Wextra -std=gnu99 
-BIN_DIR=bin
-SRC_DIR=src
-TARGET=$(BIN_DIR)/netsl
-OBJECTS=$(BIN_DIR)/main.o $(BIN_DIR)/msg.o $(BIN_DIR)/net.o $(BIN_DIR)/display.o
+BIN=bin
+SRC=src
+TARGET=$(BIN)/netsl
+OBJECTS=$(BIN)/main.o $(BIN)/msg.o $(BIN)/net.o $(BIN)/display.o
 
-all: $(BIN_DIR) $(TARGET) 
+all: $(BIN) $(TARGET)
 
-$(BIN_DIR):
-	mkdir -pv $(BIN_DIR)
+$(BIN):
+	mkdir -pv $(BIN)
 
 $(TARGET): $(OBJECTS)
 	gcc $^ -o $(TARGET)
 
-#	mkdir -pv $(BIN_DIR)
+#	mkdir -pv $(BIN)
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.c $(SRC_DIR)/%.h
+$(BIN)/%.o: $(SRC)/%.c $(SRC)/%.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-
 clean:
-	rm -rf $(BIN_DIR)
-
+	rm -rf $(BIN)
 
