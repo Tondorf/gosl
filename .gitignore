@@ -2,3 +2,4 @@ bin/
 out/
 net
 test
+*.swp
