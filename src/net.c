@@ -78,7 +78,17 @@ int run_server(const struct prog_info *pinfo) {
 		printf("sending...\n");
 		int numbytes;
 		// TODO: Hier den Messageblock erstellen und serialisieren.
-		if ((numbytes = sendto(sockfd, "bla", 3, 0, p->ai_addr, p->ai_addrlen)) == -1) {
+		// 
+		struct message *outmsg = (struct message *)malloc(sizeof(struct message));
+		outmsg->timestamp = (uint32_t)time(NULL);
+		outmsg->width = 0;
+		outmsg->height = 0;
+		outmsg->image = NULL;
+		int buflen = getBufferSize(outmsg);
+		char *outbuf = (char *)malloc(buflen);
+		serialize(outbuf, outmsg);
+
+		if ((numbytes = sendto(sockfd, outbuf, buflen, 0, p->ai_addr, p->ai_addrlen)) == -1) {
 			perror("error sending");
 			return -44;
 		}
@@ -152,7 +162,7 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 		
 		//printf("listener: got packet from %s\n", inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s));
 		//printf("listener: packet is %d bytes long\n", numbytes);
-		buf[numbytes] = '\0';
+		//buf[numbytes] = '\0';
 		//printf("listener: packet contains \"%s\"\n", buf);
 
 		struct message *msg = (struct message *)malloc(sizeof(struct message));
