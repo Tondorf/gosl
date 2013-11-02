@@ -12,6 +12,11 @@ struct message {
 	uint32_t height;	// normally 80
 	//char **image;	// dimension is width x height
 	char *image;	// dimension is width x height
+
+/*
+ * image[row][col] >>> image[row*width+col];
+ */
+
 };
 
 int getBufferSize(struct message *msg);

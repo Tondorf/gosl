@@ -13,6 +13,7 @@
 #include <time.h>
 
 #include "misc.h"
+#include "msg.h"
 
 void *get_in_addr(struct sockaddr *sa)
 {
