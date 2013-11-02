@@ -47,7 +47,6 @@ void serialize_int(int x, Buffer * b) {
 
 }
 
-void struct
 
 //serialize_string
 //serialize_message
