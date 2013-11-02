@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ncurses.h>
 
+#include "msg.h"
 #include "display.h"
 
 
