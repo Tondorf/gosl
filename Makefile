@@ -12,7 +12,7 @@ all: bin/netsl
 #	mkdir -pv bin
 #	gcc -o bin/test test.c
 
-bin/netsl: misc.h main.c net.c
+bin/netsl: misc.h main.c net.c msg.c msg.h
 	mkdir -pv bin
 	gcc $(CFLAGS) -o bin/netsl main.c
 
