@@ -13,15 +13,20 @@ void serialize (char *buf, struct message *msg) {
 	memcpy(&buf[0], &msg->timestamp, 4);
 	memcpy(&buf[4], &msg->width, 4);
 	memcpy(&buf[8], &msg->height, 4);
-	memcpy(&buf[12], msg->image, msg->width * msg->height);
+	if (msg->width * msg->height) 
+		memcpy(&buf[12], msg->image, msg->width * msg->height);
 }
 
 void deserialize (struct message *msg, const char *buf) {
 	memcpy(&msg->timestamp, &buf[0], 4);
 	memcpy(&msg->width, &buf[4], 4);
 	memcpy(&msg->height, &buf[8], 4);
-	msg->image = (char*) malloc(msg->width * msg->height);
-	memcpy(msg->image, &buf[12], msg->width * msg->height);
+	if (msg->width * msg->height) {
+		msg->image = (char*) malloc(msg->width * msg->height);
+		memcpy(msg->image, &buf[12], msg->width * msg->height);
+	} else {
+		msg->image = NULL;
+	}
 }
 
 /* Buffer ist nicht erforderlich

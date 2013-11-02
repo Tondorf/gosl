@@ -1,6 +1,8 @@
 #ifndef __MSG
 #  define __MSG
 
+#include <stdint.h>
+
 //typedef struct Buffer {
 //	int size;
 //	void *data;

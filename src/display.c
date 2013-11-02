@@ -5,6 +5,7 @@
 
 #include "display.h"
 
+<<<<<<< HEAD
 
 void setup_display() {
 	initscr();   // ncurses initialization
@@ -41,7 +42,7 @@ void print_current_image(message* msg, int start, int end) {
 }
 
 
-void callback(long tst) {
-	printf("in callback, tst=%ld\n", tst);
+void callback(const struct message *msg) {
+	printf("in callback, tst=%d\n", msg->timestamp);
 }
 
