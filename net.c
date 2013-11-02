@@ -28,6 +28,25 @@ void *get_in_addr(struct sockaddr *sa)
 }
 
 int run_server(const struct prog_info *pinfo) {
+	struct addrinfo hints, *servinfo;
+	int ret;
+
+	char portbuf[6];
+	memset(&hints, 0, sizeof(hints));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+
+	sprintf(portbuf, "%d", pinfo->port);
+	if ((ret=getaddrinfo("0.0.0.0", portbuf, &hints, &servinfo)) != 0) {
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+	        return 1;
+	}
+// ...
+
+	return 0;
+}
+
+int run_client(const struct prog_info *pinfo) {
 
 	struct addrinfo hints, *servinfo;
 	char portbuf[6];
