@@ -1,19 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+
+#include <unistd.h>  // ?
+#include <errno.h>   //   geguttenbergt aus bejees networking guide
+#include <string.h>  // ?
+
+// networking
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
-// usleep support
-#include <time.h>
+#include <time.h> // nanosleep
 
-#include "misc.h"
-#include "msg.h"
+#include "misc.h"     // prog_info
+#include "display.h"  // callback 
 
 void *get_in_addr(struct sockaddr *sa)
 {
