@@ -3,9 +3,9 @@
 #include <string.h>
 #include <ncurses.h>
 
+#include "msg.h"
 #include "display.h"
 
-<<<<<<< HEAD
 
 void setup_display() {
 	initscr();   // ncurses initialization
@@ -23,11 +23,11 @@ void cleanup_display() {
 	uint32_t height;	// normally 25, may vary
 	char *image;		// dimension is width x height
 */
-void print_current_image(message* msg, int start, int end) {
+void print_current_image(struct message* msg, int start, int end) {
 	// end is ignored and 80 is used, should be considered later
 
 	move(0,0); // start in the upper left corner
-	char *pic = msg->img; // get a ptr to the actual image
+	char *pic = msg->image; // get a ptr to the actual image
 	
 	for (int row=0; row < 25; row++) { // iterate rows
 		char *line = (char*) malloc(81);
