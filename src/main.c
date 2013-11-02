@@ -88,11 +88,10 @@ int main(int argc, char **argv) {
 			
 		printf("port: %d\n", prog_info.port);
 		if (prog_info.mode == MODE_SERVER) {
-			printf("runnin in SERVER mode\n");
+			printf("runnin in SERVER mode @%d FPS\n", prog_info.fps);
 			ret = run_server(&prog_info);
 		} else {
 			printf("running in CLIENT mode, using client number %d\n", prog_info.client_num);
-			// ...
 			ret = run_client(&prog_info, callback);
 		}
 
