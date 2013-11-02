@@ -64,7 +64,7 @@ int run_server(const struct prog_info *pinfo) {
 
 	struct timespec tim;
 	tim.tv_sec = 0;
-	tim.tv_nsec = 500000000;
+	tim.tv_nsec = 50000000;
 
 	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
@@ -74,13 +74,16 @@ int run_server(const struct prog_info *pinfo) {
 	}
 
 	//
+	int t = 0;
 	for (;;) {
-		printf("sending...\n");
+		//printf("sending...\n");
 		int numbytes;
 		// TODO: Hier den Messageblock erstellen und serialisieren.
-		// 
+		
+		t++;
+		t %= 10000;
 		struct message *outmsg = (struct message *)malloc(sizeof(struct message));
-		outmsg->timestamp = (uint32_t)time(NULL);
+		outmsg->timestamp = (uint32_t)t; //(uint32_t)time(NULL);
 		outmsg->width = 0;
 		outmsg->height = 0;
 		outmsg->image = NULL;
