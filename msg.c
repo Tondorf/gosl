@@ -15,14 +15,37 @@ struct Buffer {
 };
 
 struct message {
-	long timestamp;
-	int width;		// varies
-	int height;		// normally 80
-	char **image;	// dimension is width x height
+	uint32_t timestamp;
+	uint32_t width;		// varies
+	uint32_t height;		// normally 80
+	//char **image;	// dimension is width x height
+	char *image;	// dimension is width x height
 };
 
 
 #endif
+
+
+int getBufferSize(struct message *msg) {
+	int ret;
+		ret = 4 + 4 + 4 + msg->width * msg->height;
+	return ret;
+}
+
+void serialize (char *buf, struct message *msg) {
+	memcpy(&buf[0], &msg->timestamp, 4);
+	memcpy(&buf[4], &msg->width, 4);
+	memcpy(&buf[8], &msg->height, 4);
+	memcpy(&buf[12], msg->image, msg->width*msg->height);
+}
+
+void deserialize (struct message *msg, const char *buf) {
+	memcpy(&msg->timestamp, &buf[0], 4);
+	memcpy(&msg->width, &buf[4], 4);
+	memcpy(&msg->height, &buf[8], 4);
+	msg->image = (char *)malloc(msg->width*msg->height);
+	memcpy(msg->image, &buf[12], msg->width*msg->height);
+}
 
 struct Buffer *new_buffer() {
 	struct Buffer *b = malloc(sizeof(Buffer));
@@ -82,5 +105,6 @@ int main() {
 	printf("buf: size:%d data:%p\n", buf->size, buf->data);
 
 }
+
 
 
