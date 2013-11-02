@@ -1,7 +1,9 @@
 
+CFLAGS=-g -Wall -Wextra
+# -std=c99 # c99 breaks some of your code xD
 
-all:  bin/netsl
 
+all: bin/netsl
 
 #bin/net: net.c
 #	mkdir -pv bin
@@ -13,7 +15,8 @@ all:  bin/netsl
 
 bin/netsl: misc.h main.c net.c
 	mkdir -pv bin
-	gcc -o bin/netsl main.c
+	gcc $(CFLAGS) -o bin/netsl main.c
 
 clean:
 	rm -rf bin
+
