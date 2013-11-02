@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#include <arpa/inet.h> // htonl
 #include "msg.h"
 
 #if INTERFACE
@@ -39,7 +40,7 @@ void append_space(Buffer * b, int n) {
 
 void serialize_int(int x, Buffer * b) {
 	// htonl :: uint32_t -> uint32_t -- converts the parameter from host byte order to network byte order
-	x = htonl(x);
+	//x = htonl(x);
 
 	append_space(b, sizeof(int));
 
@@ -53,8 +54,11 @@ void serialize_string(char *str, Buffer *b) {
 
 	append_space(b, newlen);
 
-	for (int i=0; i < newlen; ++i) {
-		memcpy( ((char*)b->data) + b->size + i, str[i], sizeof(char));	
+	int i = 0;
+	while (i < newlen) {
+		memcpy( ((char*)b->data) + b->size + i, str, sizeof(char));	
+		str++;
+		i++;
 	}
 
 	b->size += newlen;
@@ -64,7 +68,19 @@ void serialize_string(char *str, Buffer *b) {
 void serialize_message(struct message *msg, Buffer *b) {
 	serialize_int(msg->timestamp, b); // does this also work for long?
 	serialize_int(msg->width, b);
-	serialize_int(msg->heigth, b);
-	serialize_string(msg->image, b);
+	serialize_int(msg->height, b);
+	for (int i=0; i < msg->width; i++)
+		serialize_string(msg->image[i], b);
 }
+
+
+int main() {
+
+	Buffer *buf = new_buffer();
+	//serialize_string("lol", buf);
+	serialize_int(42, buf);
+	printf("buf: size:%d data:%p\n", buf->size, buf->data);
+
+}
+
 
