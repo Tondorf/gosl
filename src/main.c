@@ -8,6 +8,7 @@
 #include "misc.h"
 #include "net.h"
 #include "display.h"
+#include "image.h"
 
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
@@ -18,17 +19,20 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	pinfo->client_offset = 1;
 	pinfo->port = 4711;
 	pinfo->fps = 10;
+	pinfo->width = -1;
+	pinfo->filename = NULL;
 
 	if (argc <= 1) {
-		printf("usage: %s [-s|-c <off>] [-p <port>] [-t <fps>]\n", argv[0]);
-		printf("where:\n -s         run in server mode\n");
-		printf(        " -c <off>   run in client mode\n");
-		printf(        "            off is the column offset to use.\n");
-		printf(        " -p <port>  use the specified port\n");
-		printf(        " -t <fps>   when in server mode: update <fps> times\n"); 
-		printf(        "            per second. Valid range: 2 - 99\n");
-		printf(        "            ignored in client mode\n");
-		printf(        " -v          \n");
+		printf("usage: %s [-s|-c <off>] [-p <port>] [-t <fps>] [-w <width>] -i <img>\n", argv[0]);
+		printf("where:\n -s           run in server mode\n");
+		printf(        " -c <off>     run in client mode\n");
+		printf(        "              off is the column offset to use.\n");
+		printf(        " -p <port>    use the specified port\n");
+		printf(        " -t <fps>     when in server mode: update <fps> times\n"); 
+		printf(        "              per second. Valid range: 2 - 99\n");
+		printf(        "              ignored in client mode\n");
+		printf(        " -w <width>   maximum width of the whole field. server only.\n");
+		printf(        " -i <img>     image fielname. server only\n");
 		printf("\n\n");
 		return -1;
 	}
@@ -74,10 +78,29 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 				return -7;
 			}
 			continue;
-			
+		}
+		if (strncmp(argv[i], "-w", 2) == 0) {
+			if (argc <= i+1) {
+				printf("width not specified\n");
+				return -8;
+			}
+			pinfo->width = (int)strtol(argv[++i], NULL, 10);
+			if (pinfo->width <= 1) {
+				printf("width invalid!\n");
+				return -9;
+			}
+			continue;
+		}
+		if (strncmp(argv[i], "-i", 2) == 0) {
+			if (argc <= i+1) {
+				printf("image filename not specified\n");
+				return -10;
+			}
+			pinfo->filename = argv[++i];
+			continue;
 		}
 		printf("unknown argument %s\n", argv[i]);
-		return -6;
+		return -11;
 	}
 
 	return 0;
@@ -92,7 +115,18 @@ int main(int argc, char **argv) {
 		printf("port: %d\n", prog_info.port);
 		if (prog_info.mode == MODE_SERVER) {
 			printf("running in SERVER mode @%d FPS\n", prog_info.fps);
-			ret = run_server(&prog_info);
+			if (!prog_info.filename) {
+				printf("no image given\n");
+				return -12;
+			}
+			int w, h;
+			char *image = readImage(prog_info.filename, &w, &h);
+			if (!image) {
+				printf("could not read image!\n");
+				return -13;
+			}
+			prog_info.width = prog_info.width>(w*2)?prog_info.width:(w*2);
+			ret = run_server(&prog_info, image, w, h);
 		} else {
 			printf("running in CLIENT mode, using client number %d\n", prog_info.client_offset);
 			signal(SIGINT,&cleanup_display);

@@ -33,7 +33,7 @@ void *get_in_addr(struct sockaddr *sa)
 // server mode
 // pumpt im for(;;) den status ins eth
 //
-int run_server(const struct prog_info *pinfo) {
+int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 	struct addrinfo hints, *servinfo, *p;
 	int ret;
 	int sockfd;
@@ -81,12 +81,18 @@ int run_server(const struct prog_info *pinfo) {
 		// TODO: Hier den Messageblock erstellen und serialisieren.
 		
 		t++;
-		t %= 10000;
+		t %= pinfo->width;
 		struct message *outmsg = (struct message *)malloc(sizeof(struct message));
 		outmsg->timestamp = (uint32_t)t; //(uint32_t)time(NULL);
-		outmsg->width = 0;
-		outmsg->height = 0;
-		outmsg->image = NULL;
+		if ((t % 100) == 0) {
+			outmsg->width = w;
+			outmsg->height = h;
+			outmsg->image = img;
+		} else {
+			outmsg->width = 0;
+			outmsg->height = 0;
+			outmsg->image = NULL;
+		}
 		int buflen = getBufferSize(outmsg);
 		char *outbuf = (char *)malloc(buflen);
 		serialize(outbuf, outmsg);

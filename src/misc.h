@@ -6,6 +6,8 @@ struct prog_info {
 	int client_offset;
 	int port;
 	int fps;
+	int width;
+	char *filename;
 } prog_info;
 
 #endif
