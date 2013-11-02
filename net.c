@@ -10,7 +10,13 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#define PORT "4711"
+// usleep support
+#include <time.h>
+
+#include "misc.h"
+
+#define PORT(p) PORTSTR(p)
+#define PORTSTR(p) #p
 
 void *get_in_addr(struct sockaddr *sa)
 {
@@ -21,17 +27,20 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-int main (int argc, char **argv) {
+int run_server(const struct prog_info *pinfo) {
 
 	struct addrinfo hints, *servinfo;
+	char portbuf[6];
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;      // IPv4
 	hints.ai_socktype = SOCK_DGRAM; // UDP
 	hints.ai_flags = AI_PASSIVE;
 
+	sprintf(portbuf, "%d", pinfo->port);
+
 	int rv;
-	if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
+	if ((rv = getaddrinfo(NULL, portbuf, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
 		return 1;
 	}

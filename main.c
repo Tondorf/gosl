@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include "misc.h"
+#include "net.c"
+
+
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
 
-struct prog_info {
-	int mode;
-	int client_num;
-	int port;
-} prog_info;
 
 int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	pinfo->mode = MODE_SERVER;
@@ -66,13 +65,12 @@ int main(int argc, char **argv) {
 		printf("port: %d\n", prog_info.port);
 		if (prog_info.mode == MODE_SERVER) {
 			printf("runnin in SERVER mode\n");
-			//  ...
+			ret = run_server(&prog_info);
 		} else {
 			printf("running in CLIENT mode, using client number %d\n", prog_info.client_num);
 			// ...
 		}
 
-		return 0;
 	}
 	return ret;
 }
