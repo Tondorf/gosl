@@ -15,9 +15,17 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	pinfo->mode = MODE_SERVER;
 	pinfo->client_num = 1;
 	pinfo->port = 4711;
+	pinfo->fps = 10;
 
 	if (argc <= 1) {
-		printf("usage: %s [-s|-c <num>] [-p <port>]\n", argv[0]);
+		printf("usage: %s [-s|-c <off>] [-p <port>] [-t <fps>]\n", argv[0]);
+		printf("where:\n -s         run in server mode\n");
+		printf(        " -c <num>   run in client mode\n");
+		printf(        "            num is the column offset to use.\n");
+		printf(        " -p <port>  use the specified port\n");
+		printf(        " -t <fps>   when in server mode: update <fps> times per second\n");
+		printf(        "            no use in client mode\n");
+		printf("\n\n");
 		return -1;
 	}
 	int i;
@@ -50,6 +58,19 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 				return -5;
 			}
 			continue;
+		}
+		if (strncmp(argv[i], "-t", 2) == 0) {
+			if (argc <= i+1) {
+				printf("fps not specified\n");
+				return -6;
+			}
+			pinfo->fps = (int)strtol(argv[++i], NULL, 10);
+			if (pinfo->fps <= 0 || 50 <= pinfo->fps) {
+				printf("fps invalid!\n");
+				return -7;
+			}
+			continue;
+			
 		}
 		printf("unknown argument %s\n", argv[i]);
 		return -6;
