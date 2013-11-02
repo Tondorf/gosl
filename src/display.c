@@ -1,6 +1,6 @@
 
 #include "display.h"
 
-void callback(long tst) {
-	printf("in callback, tst=%ld\n", tst);
+void callback(const struct message *msg) {
+	printf("in callback, tst=%d\n", msg->timestamp);
 }

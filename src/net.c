@@ -14,9 +14,12 @@
 
 #include <time.h> // nanosleep
 
-#include "misc.h"     // prog_info
-#include "display.h"  // callback 
+#include "net.h"
 
+
+// kleiner helfer
+// auch von bejee geguttenbergt
+//
 void *get_in_addr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET) {
@@ -26,6 +29,10 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
+
+// server mode
+// pumpt im for(;;) den status ins eth
+//
 int run_server(const struct prog_info *pinfo) {
 	struct addrinfo hints, *servinfo, *p;
 	int ret;
@@ -59,15 +66,18 @@ int run_server(const struct prog_info *pinfo) {
 	tim.tv_sec = 0;
 	tim.tv_nsec = 500000000;
 
+	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
 		fprintf(stderr, "setsockopt error");
 		exit(1);
 	}
 
+	//
 	for (;;) {
 		printf("sending...\n");
 		int numbytes;
+		// TODO: Hier den Messageblock erstellen und serialisieren.
 		if ((numbytes = sendto(sockfd, "bla", 3, 0, p->ai_addr, p->ai_addrlen)) == -1) {
 			perror("error sending");
 			return -44;
@@ -82,7 +92,11 @@ int run_server(const struct prog_info *pinfo) {
 	return 0;
 }
 
-int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
+
+// lauschangriff:
+// einfach mal in den äther horchen und alle messages rausnehmen die wo da gibt.
+//
+int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct message *) ) {
 
 	struct addrinfo hints, *servinfo;
 	char portbuf[6];
@@ -104,7 +118,7 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 	
 	struct addrinfo *info;
 	int sockfd;
-	//char s[INET6_ADDRSTRLEN];
+	// mal drin lassen: falls die ip der gegenstelle relevant werden sollte: char s[INET6_ADDRSTRLEN];
 	for (info = servinfo; info != NULL; info = info->ai_next) {
 		if ((sockfd = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == -1) {
 			perror("sock");
@@ -141,7 +155,10 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(long) ) {
 		buf[numbytes] = '\0';
 		//printf("listener: packet contains \"%s\"\n", buf);
 
-		framecallback(123);
+		struct message *msg = (struct message *)malloc(sizeof(struct message));
+		deserialize(msg, buf);
+
+		framecallback(msg);
 
 	} while (strncmp(buf, "exit", 10000));
 	

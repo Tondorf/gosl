@@ -2,7 +2,8 @@
 #define __DISPLAY
 
 #include <stdio.h>
+#include "msg.h"
 
-void callback(long tst);
+void callback(const struct message *msg);
 
 #endif
