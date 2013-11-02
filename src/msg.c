@@ -24,6 +24,8 @@ void deserialize (struct message *msg, const char *buf) {
 	memcpy(msg->image, &buf[12], msg->width * msg->height);
 }
 
+/* Buffer ist nicht erforderlich
+
 struct Buffer *new_buffer() {
 	struct Buffer *b = malloc(sizeof(Buffer));
 
@@ -73,7 +75,6 @@ void serialize_message(struct message *msg, Buffer *b) {
 		serialize_string(msg->image[i], b);
 }
 
-/*
 int main() {
 
 	Buffer *buf = new_buffer();
