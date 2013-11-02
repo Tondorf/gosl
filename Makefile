@@ -1,21 +1,18 @@
 
 CFLAGS=-g -Wall -Wextra -std=gnu99 
+TARGET=bin/netsl
+OBJECTS=main.o msg.o net.o
 
+all: $(TARGET)
 
-all: bin/netsl
-
-#bin/net: net.c
-#	mkdir -pv bin
-#	gcc -o bin/net net.c
-
-#bin/test: test.c
-#	mkdir -pv bin
-#	gcc -o bin/test test.c
-
-bin/netsl: misc.h main.c net.c msg.c msg.h
+$(TARGET): $(OBJECTS)
 	mkdir -pv bin
-	gcc $(CFLAGS) -o bin/netsl main.c
+	gcc $^ -o $(TARGET)
+
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -rf bin
+	-$(RM) -rf *.o bin
+
 

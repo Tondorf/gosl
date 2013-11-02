@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 
 #include "misc.h"
-#include "net.c"
-
+#include "net.h"
 
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
