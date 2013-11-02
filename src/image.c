@@ -1,4 +1,11 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/param.h> // MAX
+
 #include "image.h"
+
+#define LINELEN 20000
 
 char *readImage(const char* filename, int *cols, int *rows) {
 	
@@ -13,7 +20,7 @@ char *readImage(const char* filename, int *cols, int *rows) {
 	if (f) {
 		while (fgets(linebuf, LINELEN, f)) {
 			int len = strlen(linebuf);
-			*cols = len>*cols?len:*cols;
+			*cols = MAX(len, *cols);
 			(*rows)++;
 		}
 		
@@ -31,3 +38,4 @@ char *readImage(const char* filename, int *cols, int *rows) {
 
 	return ret;
 }
+

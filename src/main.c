@@ -13,6 +13,10 @@
 #define MODE_SERVER 0
 #define MODE_CLIENT 1
 
+void die() {
+	cleanup_display();
+	exit(1);
+}
 
 int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 	pinfo->mode = MODE_SERVER;
@@ -128,8 +132,9 @@ int main(int argc, char **argv) {
 			prog_info.width = prog_info.width>(w*2)?prog_info.width:(w*2);
 			ret = run_server(&prog_info, image, w, h);
 		} else {
-			printf("running in CLIENT mode, using client number %d\n", prog_info.client_offset);
-			signal(SIGINT,&cleanup_display);
+			printf("running in CLIENT mode, using client offset %d\n", prog_info.client_offset);
+			signal(SIGINT,&die);
+			signal(SIGTERM,&die);
 			ret = run_client(&prog_info, callback);
 		}
 
