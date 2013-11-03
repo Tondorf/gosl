@@ -89,12 +89,18 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	int right = pinfo->client_offset;
 	int left = right + cols;
 
+//	for (int y=0; y<h; y++)
+//		for (int x=0; x<w; x++) 
+//			mvaddch(y,x,img[y*w+x]);
+
+
 //	printf("loop\n");
 	int rowoffset = (rows-h)/2;
 	int coloffset = left-frame;
 	for (int y=0; y<h; y++) { // y<msg->height; y++) {
    		for (int x=left-frame; x<cols; x++) {
-				
+			if (x<0) 
+				continue;
 			//mvaddch(y + rowoffset, x, ('0' + x-(left-frame)+y));
 			int p = x-(left-frame);
 			mvaddch(y + rowoffset, x, p>=w?' ':img[y*w+p]);
