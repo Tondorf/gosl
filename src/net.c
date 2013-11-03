@@ -17,16 +17,19 @@
 #include "net.h"
 
 
-// kleiner helfer
-// auch von bejee geguttenbergt
-//
-void *get_in_addr(struct sockaddr *sa)
-{
-	if (sa->sa_family == AF_INET) {
-		return &(((struct sockaddr_in*)sa)->sin_addr);
+// little helper
+static void *get_in_addr(struct sockaddr *sa) {
+	switch (sa->sa_family) {
+		case AF_INET:
+			return &(((struct sockaddr_in*)sa)->sin_addr);
+			break;
+		case AF_INET6:
+			return &(((struct sockaddr_in6*)sa)->sin6_addr);
+			break;
+		case AF_UNSPEC:
+		default:
+			return NULL;
 	}
-
-	return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
 
@@ -46,10 +49,10 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 	sprintf(portbuf, "%d", pinfo->port);
 	if ((ret=getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
-			return 1;
+		return 1;
 	}
 
-	for(p = servinfo; p != NULL; p = p->ai_next) {
+	for (p = servinfo; p != NULL; p = p->ai_next) {
 	 	if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
 			perror("talker: socket");
 			continue;
