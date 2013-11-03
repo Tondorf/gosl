@@ -81,7 +81,6 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 	for (;;) {
 		//printf("sending...\n");
 		int numbytes;
-		// TODO: Hier den Messageblock erstellen und serialisieren.
 		
 		t++;
 		t %= pinfo->width;
@@ -102,7 +101,7 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 
 		if ((numbytes = sendto(sockfd, outbuf, buflen, 0, p->ai_addr, p->ai_addrlen)) == -1) {
 			perror("error sending");
-			return -44;
+			return -42;
 		}
 		nanosleep(&tim, NULL);
 	}
