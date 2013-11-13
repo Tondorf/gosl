@@ -14,7 +14,8 @@ struct message {
 	uint32_t height;	// normally 25, may vary
 	//char **image;	// dimension is width x height
 	char *image;	// dimension is width x height
-
+	//TODO:
+	// Make image anim capable
 /*
  * image[row][col] >>> image[row*width+col];
  */
