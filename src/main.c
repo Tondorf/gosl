@@ -32,11 +32,11 @@ int parseArgs(struct prog_info *pinfo, int argc, char **argv) {
 		printf(        " -c <off>     run in client mode\n");
 		printf(        "              off is the column offset to use.\n");
 		printf(        " -p <port>    use the specified port\n");
-		printf(        " -t <fps>     when in server mode: update <fps> times\n"); 
+		printf(        " -t <fps>     when in server mode: update <fps> times\n");
 		printf(        "              per second. Valid range: 2 - 99\n");
 		printf(        "              ignored in client mode\n");
 		printf(        " -w <width>   maximum width of the whole field. server only.\n");
-		printf(        " -i <img>     image fielname. server only\n");
+		printf(        " -i <img>     image filename. server only\n");
 		printf("\n\n");
 		return -1;
 	}

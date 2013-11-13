@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 #include <unistd.h>  // ?
 #include <errno.h>   //   geguttenbergt aus bejees networking guide
@@ -40,14 +41,14 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 	struct addrinfo hints, *servinfo, *p;
 	int ret;
 	int sockfd;
-
 	char portbuf[6];
+
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_DGRAM;
 
 	sprintf(portbuf, "%d", pinfo->port);
-	if ((ret=getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
+	if ((ret = getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
 		return 1;
 	}
@@ -71,7 +72,7 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 
 	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
-	if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission,sizeof(broadcastPermission)) < 0){
+	if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission, sizeof(broadcastPermission)) < 0){
 		fprintf(stderr, "setsockopt error");
 		exit(1);
 	}
@@ -84,19 +85,16 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 		
 		t++;
 		t %= pinfo->width;
-		struct message *outmsg = (struct message *)malloc(sizeof(struct message));
+		struct message *outmsg = (struct message *) malloc(sizeof(struct message));
 		outmsg->timestamp = (uint32_t)t; //(uint32_t)time(NULL);
-		if ((t % 100) == 0) {
-			outmsg->width = w;
-			outmsg->height = h;
-			outmsg->image = img;
-		} else {
-			outmsg->width = 0;
-			outmsg->height = 0;
-			outmsg->image = NULL;
-		}
+		// send image every 100 frames
+		bool sendimg = (t % 100) == 0;
+		outmsg->width  = sendimg ? w   : 0;
+		outmsg->height = sendimg ? h   : 0;
+		outmsg->image  = sendimg ? img : NULL;
+
 		int buflen = getBufferSize(outmsg);
-		char *outbuf = (char *)malloc(buflen);
+		char *outbuf = (char *) malloc(buflen);
 		serialize(outbuf, outmsg);
 
 		if ((numbytes = sendto(sockfd, outbuf, buflen, 0, p->ai_addr, p->ai_addrlen)) == -1) {
@@ -143,12 +141,12 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 	for (info = servinfo; info != NULL; info = info->ai_next) {
 		if ((sockfd = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == -1) {
 			perror("sock");
-			continue; 
+			continue;
 		}
 
 		if (bind(sockfd, info->ai_addr, info->ai_addrlen) == -1) {
 			perror("bind");
-			continue; 
+			continue;
 		}
 
 		break;
