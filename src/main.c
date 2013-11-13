@@ -123,14 +123,14 @@ int main(int argc, char **argv) {
 				printf("no image given\n");
 				return -12;
 			}
-			int w, h;
-			char *image = readImage(prog_info.filename, &w, &h);
+			int w, h, i;
+			char *image = readImage(prog_info.filename, &w, &h, &i);
 			if (!image) {
 				printf("could not read image!\n");
 				return -13;
 			}
 			prog_info.width = prog_info.width>(w*2)?prog_info.width:(w*2);
-			ret = run_server(&prog_info, image, w, h);
+			ret = run_server(&prog_info, image, w, h, i);
 		} else {
 			printf("running in CLIENT mode, using client offset %d\n", prog_info.client_offset);
 			signal(SIGINT,&die);

@@ -37,7 +37,7 @@ static void *get_in_addr(struct sockaddr *sa) {
 // server mode
 // pumpt im for(;;) den status ins eth
 //
-int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
+int run_server(const struct prog_info *pinfo, char *img, int w, int h, int frms) {
 	struct addrinfo hints, *servinfo, *p;
 	int ret;
 	int sockfd;
@@ -91,6 +91,7 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h) {
 		bool sendimg = (t % 100) == 0;
 		outmsg->width  = sendimg ? w   : 0;
 		outmsg->height = sendimg ? h   : 0;
+		outmsg->frames = sendimg ? frms: 0;
 		outmsg->image  = sendimg ? img : NULL;
 
 		int buflen = getBufferSize(outmsg);

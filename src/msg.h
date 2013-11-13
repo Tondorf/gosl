@@ -12,10 +12,9 @@ struct message {
 	uint32_t timestamp;
 	uint32_t width;		// normally 80
 	uint32_t height;	// normally 25, may vary
+	uint32_t frames; // number of frames
 	//char **image;	// dimension is width x height
 	char *image;	// dimension is width x height
-	//TODO:
-	// Make image anim capable
 /*
  * image[row][col] >>> image[row*width+col];
  */

@@ -65,10 +65,12 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 	static char *img = NULL;
 	static int w;
 	static int h;
+	static int f;
 	if (!img && msg->image) {
 		img = msg->image;
 		w = msg->width;
 		h = msg->height;
+		f = msg->frames;
 	}
 	if (!img) {
 		printf("awaiting state ... %d\r", msg->timestamp);
@@ -97,13 +99,14 @@ void prntscreen(const struct message *msg, const struct prog_info *pinfo) {
 //	printf("loop\n");
 	int rowoffset = (rows-h)/2;
 	//int coloffset = left-frame;
+	int imgoff = (frame % f)  * w * h;
 	for (int y=0; y<h; y++) { // y<msg->height; y++) {
    		for (int x=left-frame; x<cols; x++) {
 			if (x<0)
 				continue;
 			//mvaddch(y + rowoffset, x, ('0' + x-(left-frame)+y));
 			int p = x-(left-frame);
-			mvaddch(y + rowoffset, x, p>=w?' ':img[y*w+p]);
+			mvaddch(y + rowoffset, x, p>=w-1?' ':img[imgoff+(y*w+p)]);
 		}
 	}
 

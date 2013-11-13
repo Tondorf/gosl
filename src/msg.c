@@ -6,24 +6,26 @@
 #include "msg.h"
 
 int getBufferSize(struct message *msg) {
-	return 3*sizeof(uint32_t) + msg->width * msg->height;
+	return 4*sizeof(uint32_t) + msg->width * msg->height * msg->frames;
 }
 
 void serialize (char *buf, struct message *msg) {
 	memcpy(&buf[0], &msg->timestamp, 4);
 	memcpy(&buf[4], &msg->width, 4);
 	memcpy(&buf[8], &msg->height, 4);
+	memcpy(&buf[12], &msg->frames, 4);
 	if (msg->width * msg->height)
-		memcpy(&buf[12], msg->image, msg->width * msg->height);
+		memcpy(&buf[16], msg->image, msg->frames * msg->width * msg->height);
 }
 
 void deserialize (struct message *msg, const char *buf) {
 	memcpy(&msg->timestamp, &buf[0], 4);
 	memcpy(&msg->width, &buf[4], 4);
 	memcpy(&msg->height, &buf[8], 4);
+	memcpy(&msg->frames, &buf[12], 4);
 	if (msg->width * msg->height) {
-		msg->image = (char*) malloc(msg->width * msg->height);
-		memcpy(msg->image, &buf[12], msg->width * msg->height);
+		msg->image = (char*) malloc(msg->width * msg->height * msg->frames);
+		memcpy(msg->image, &buf[16], msg->width * msg->height * msg->frames);
 	} else {
 		msg->image = NULL;
 	}
