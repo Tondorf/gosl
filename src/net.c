@@ -49,20 +49,20 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h, int frms)
 
 	sprintf(portbuf, "%d", pinfo->port);
 	if ((ret = getaddrinfo("255.255.255.255", portbuf, &hints, &servinfo)) != 0) {
-		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
+		fprintf(stderr, "so getaddrinfo error: %s\n", gai_strerror(ret));
 		return 1;
 	}
 
 	for (p = servinfo; p != NULL; p = p->ai_next) {
 	 	if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
-			perror("talker: socket");
+			perror("talker: much socket error");
 			continue;
 		}
 		break;
 	}
 
 	if (p == NULL) {
-		fprintf(stderr, "talker: failed to bind socket\n");
+		fprintf(stderr, "talker: such fail to bind socket\n");
 		return 2;
 	}
 
@@ -73,7 +73,7 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h, int frms)
 	// Einem Socket muss das Broadcasting explizit erlaubt werden:
  	int broadcastPermission = 1;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, (void *) &broadcastPermission, sizeof(broadcastPermission)) < 0){
-		fprintf(stderr, "setsockopt error");
+		fprintf(stderr, "very setsockopt error");
 		exit(1);
 	}
 
@@ -99,7 +99,7 @@ int run_server(const struct prog_info *pinfo, char *img, int w, int h, int frms)
 		serialize(outbuf, outmsg);
 
 		if ((numbytes = sendto(sockfd, outbuf, buflen, 0, p->ai_addr, p->ai_addrlen)) == -1) {
-			perror("error sending");
+			perror("much error while sending");
 			return -42;
 		}
 		nanosleep(&tim, NULL);
@@ -141,22 +141,22 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 	// mal drin lassen: falls die ip der gegenstelle relevant werden sollte: char s[INET6_ADDRSTRLEN];
 	for (info = servinfo; info != NULL; info = info->ai_next) {
 		if ((sockfd = socket(info->ai_family, info->ai_socktype, info->ai_protocol)) == -1) {
-			perror("sock");
+			perror("very socket error");
 			continue;
 		}
 
 		if (bind(sockfd, info->ai_addr, info->ai_addrlen) == -1) {
-			perror("bind");
+			perror("much bind error");
 			continue;
 		}
 
 		break;
 	}
 	if (!info) {
-		fprintf(stderr, "unbound\n");
+		fprintf(stderr, "many unbound\n");
 		return 2;
 	}
-	printf("check!\n");
+	printf("so check!\n");
 
 	freeaddrinfo(servinfo); // free whole list
 
@@ -180,10 +180,9 @@ int run_client(const struct prog_info *pinfo, void (*framecallback)(const struct
 
 		framecallback(msg, pinfo);
 
-	} while (strncmp(buf, "exit", 10000));
+	} while (strncmp(buf, "much exit", 10000));
 	
 	close(sockfd);
 	
 	return 0;
 }
-
