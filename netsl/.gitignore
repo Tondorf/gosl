@@ -1,0 +1,8 @@
+bin/
+out/
+net
+test
+*.o
+*.swp
+a.out
+netsl
