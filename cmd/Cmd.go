@@ -9,7 +9,7 @@ import (
 var cmdGosl = &cobra.Command{
 	Use:   "gosl [command]",
 	Short: "Run a gosl instance",
-	Long: `Run a gosl server or client."
+	Long: `Run a gosl server or client.
 
 For further instructions run 'gosl help [command]'
 `,
