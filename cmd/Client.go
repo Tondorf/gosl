@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"code.bitsetter.de/fun/gosl/data"
 )
 
 var cmdClient = &cobra.Command{
@@ -15,6 +17,7 @@ var cmdClient = &cobra.Command{
 
 func runClient(cmd *cobra.Command, args []string) {
 	fmt.Println("running client ...")
+	data.TestNC()
 }
 
 func init() {

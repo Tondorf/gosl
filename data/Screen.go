@@ -20,8 +20,8 @@ func TestNC() {
 		os.Exit(1)
 	}
 	win.Clear()
-	w, h := win.MaxYX()
+	h, w := win.MaxYX()
 	goncurses.End()
-	fmt.Printf("screen: %d x %d", w, h)
+	fmt.Printf("screen: %d x %d\n", w, h)
 
 }
