@@ -35,9 +35,7 @@ var clientKeys []int = make([]int, 100)
 
 func handleConn(conn *net.TCPConn) {
 	var hs handshake
-
 	log.Println("Got a connection!")
-
 	// handshake
 	dec := gob.NewDecoder(conn) // Decoder
 	dec.Decode(&hs)
@@ -46,13 +44,11 @@ func handleConn(conn *net.TCPConn) {
 	sort.Ints(clientKeys)
 	clients[hs.ID] = goslClient{con: conn, id: hs.ID, w: hs.W, h: hs.H}
 	TotalWidth += hs.W
-
 	// conn.Close()
 }
 
 func serveClients() {
 	for { // while true
-
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
@@ -60,13 +56,11 @@ func serveClients() {
 			}
 		}
 		time.Sleep(time.Second)
-
 	}
 }
 
 func runServer(cmd *cobra.Command, args []string) {
 	fmt.Println("running server ...")
-
 	listener, err := net.ListenTCP("tcp", &net.TCPAddr{Port: SERVERPORT})
 	if err != nil {
 		log.Fatal(err)
@@ -82,7 +76,6 @@ func runServer(cmd *cobra.Command, args []string) {
 		}
 		go handleConn(conn)
 	}
-
 }
 
 func init() {
