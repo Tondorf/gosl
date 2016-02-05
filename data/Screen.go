@@ -13,15 +13,15 @@ type Screen struct {
 	data []rune
 }
 
-func TestNC() {
+func TestNC() (int, int) {
 	win, err := goncurses.Init()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 	win.Clear()
-	w, h := win.MaxYX()
+	h, w := win.MaxYX()
 	goncurses.End()
-	fmt.Printf("screen: %d x %d", w, h)
-
+	fmt.Printf("screen: %d x %d\n", w, h)
+	return w, h
 }
