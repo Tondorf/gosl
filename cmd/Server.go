@@ -1,6 +1,7 @@
 package cmd // code.bitsetter.de/fun/gosl/cmd
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net"
@@ -13,14 +14,22 @@ import (
 var cmdServer = &cobra.Command{
 	Use:   "server",
 	Short: "Runs Gosl as a server",
-	Long:  "Runs Gosl as a server",
+	Long: `Runs Gosl as a server
+
+[TODO:]
+gosl.json for configuration (Port/Adress, Level)
+`,
 	//	Run:
 }
 
 func handleConn(conn *net.TCPConn) {
-	log.Println("Got a connection!")
-	conn.Close()
+	log.Println("Got a connection from: ", conn.RemoteAddr().String())
 
+	gobd := gob.NewDecoder(conn)
+	var h data.Handshake
+	gobd.Decode(&h)
+	log.Println(h)
+	conn.Close()
 }
 
 func runServer(cmd *cobra.Command, args []string) {
