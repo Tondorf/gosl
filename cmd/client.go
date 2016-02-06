@@ -81,6 +81,9 @@ func runClient(cmd *cobra.Command, args []string) {
 		select {
 		case <-c:
 			// funzt noch nicht:
+			log.Println("Got a KILL")
+			con.Close()
+			close(renderQueue)
 			run = false
 		default:
 			if data.GetChar() != 0 {

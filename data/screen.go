@@ -4,30 +4,38 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	nc "github.com/rthornton128/goncurses"
 )
 
 var (
-	win    *nc.Window
-	ncquit = make(chan bool)
+	win      *nc.Window
+	ncquit   = make(chan bool)
+	winMutex = &sync.Mutex{}
 )
 
 func RenderFrame(f *Frame) {
-	win.Clear()
-	for k, _ := range f.Data {
-		win.MovePrint(k+1, 1, string(f.Data[k]))
+	winMutex.Lock()
+	if win != nil {
+		win.Clear()
+		for k, _ := range f.Data {
+			win.MovePrint(k, 0, string(f.Data[k]))
+		}
 	}
+	winMutex.Unlock()
 }
 
 func InitNC(killchan chan<- os.Signal) {
 	var err error
+	winMutex.Lock()
 	win, err = nc.Init()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 	win.Timeout(1)
+	winMutex.Unlock()
 	go func() {
 		select {
 		case <-ncquit:
@@ -38,13 +46,18 @@ func InitNC(killchan chan<- os.Signal) {
 }
 
 func ExitNC() {
-	//if win != nil {
-	nc.End()
-	ncquit <- true
-	//	}
+	winMutex.Lock()
+	if win != nil {
+		win = nil
+		nc.End()
+		ncquit <- true
+	}
+	winMutex.Unlock()
 }
 
 func GetChar() int {
+	winMutex.Lock()
+	defer winMutex.Unlock()
 	if win != nil {
 		k := win.GetChar()
 		return int(k)
@@ -52,7 +65,7 @@ func GetChar() int {
 	return 0
 }
 
-func TestNC() (int, int) {
+func testNC() (int, int) {
 	win, err := nc.Init()
 	if err != nil {
 		log.Fatal(err)
