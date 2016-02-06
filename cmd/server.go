@@ -2,6 +2,7 @@ package cmd // code.bitsetter.de/fun/gosl/cmd
 
 import (
 	"encoding/gob"
+	"fmt"
 	"log"
 	"net"
 	"sort"
@@ -68,6 +69,7 @@ func serveClients() {
 			if id > 0 {
 				enc := gob.NewEncoder(client.con)
 				enc.Encode(oFrame)
+
 				//log.Println("ID:", id, "Client:", client)
 			}
 		}
