@@ -29,4 +29,6 @@ _testmain.go
 *.pem
 *.crt
 
+*.lvl
+
 /gosl

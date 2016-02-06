@@ -12,43 +12,9 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"code.bitsetter.de/fun/gosl/data"
 )
-
-type directionType int
-
-const (
-	DIR_NULL directionType = iota // Undefined direction: NO Motion
-	DIR_SW                        //
-	DIR_S                         //  NW   N   NE
-	DIR_SE                        //     7 8 9
-	DIR_W                         //  W  4 5 6  E
-	DIR_NONE                      //     1 2 3
-	DIR_E                         //  SW   S   SE
-	DIR_NW
-	DIR_N
-	DIR_NE
-)
-
-type Direction interface {
-	Base() directionType
-}
-
-func (i directionType) Base() directionType { return i }
-
-type LayerManifest struct {
-	Z      int           `json:"Z-Index"`
-	D      directionType `json:"Direction"`
-	S      int           `json:"Speed"`
-	T      string        `json:"Transparent"`
-	Repeat bool
-	Frames map[int]([][]rune)
-}
-
-type LevelManifest struct {
-	Name   string
-	FPS    int
-	Layers map[string]*LayerManifest
-}
 
 var (
 	levelDir  string
@@ -79,7 +45,7 @@ func compile(cmd *cobra.Command, args []string) {
 	}
 	log.Println("will compile to", levelFile)
 
-	lvlMan := &LevelManifest{}
+	lvlMan := &data.Level{}
 	buf, err := ioutil.ReadFile(levelDir + "/Manifest.json")
 	if err != nil {
 		log.Fatal("Error reading file: ", err)
@@ -125,6 +91,7 @@ func compile(cmd *cobra.Command, args []string) {
 	enc := gob.NewEncoder(obuf)
 	enc.Encode(&lvlMan)
 	ioutil.WriteFile(levelFile, obuf.Bytes(), 0644)
+	log.Println("done.")
 }
 
 func init() {

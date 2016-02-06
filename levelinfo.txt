@@ -23,7 +23,6 @@
 LevelDir
  +-- Manifest        :)
  +-- Layer 1
- |    +-- Manifest   << layer dimension, orientation and speed, transparency char
  |    +-- 1.frame    << text, unix style lf
  |    +-- 2.frame
  |    | …
