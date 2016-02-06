@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+
+	"code.bitsetter.de/fun/gosl/data"
 )
 
 var cmdServer = &cobra.Command{
@@ -51,11 +53,23 @@ func handleConn(conn *net.TCPConn) {
 }
 
 func serveClients() {
+	var oFrame = data.Frame{
+		1, 10,
+		[][]rune{
+			[]rune("hallo"),
+			[]rune("das"),
+			[]rune("ist"),
+			[]rune("einTest"),
+		},
+	}
 	for { // while true
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
+				enc := gob.NewEncoder(client.con)
+				enc.Encode(oFrame)
 				log.Println("ID:", id, "Client:", client)
+
 			}
 		}
 		time.Sleep(time.Second)

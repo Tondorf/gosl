@@ -8,9 +8,31 @@ import (
 	nc "github.com/rthornton128/goncurses"
 )
 
-type Screen struct {
-	w, h int
-	data []rune
+var (
+	win *nc.Window
+)
+
+func RenderFrame(f *Frame) {
+	win.Clear()
+	for k, _ := range f.Data {
+		win.MovePrint(k+1, 1, string(f.Data[k]))
+	}
+}
+
+func InitNC() {
+	var err error
+	win, err = nc.Init()
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+}
+
+func ExitNC() {
+	//if win != nil {
+
+	//	}
+	nc.End()
 }
 
 func TestNC() (int, int) {

@@ -3,6 +3,7 @@ package cmd // code.bitsetter.de/fun/gosl/cmd
 import (
 	"encoding/gob"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"strconv"
@@ -20,17 +21,27 @@ var cmdClient = &cobra.Command{
 }
 
 var (
-	ServerHost string
+	ServerHost  string
+	renderQueue = make(chan data.Frame)
 )
 
 func register(con net.Conn, id int) error {
-	w, h := data.TestNC()
+	w, h := 0, 0               //data.TestNC()
 	enc := gob.NewEncoder(con) // Encoder
 	err := enc.Encode(handshake{ID: id, H: h, W: w})
 	return err
 }
 
+func render() {
+	var f data.Frame
+	for f = range renderQueue {
+		data.RenderFrame(&f)
+	}
+}
+
 func runClient(cmd *cobra.Command, args []string) {
+	data.InitNC()
+	defer data.ExitNC()
 	fmt.Println("running client ...")
 
 	if len(args) < 1 {
@@ -43,8 +54,21 @@ func runClient(cmd *cobra.Command, args []string) {
 	if err != nil {
 		fmt.Println("connect error:", err)
 	}
-
+	defer con.Close()
 	register(con, id)
+
+	go render()
+	for {
+		var oFrame data.Frame
+		// always use new decoder - reusing may lead to errors
+		gd := gob.NewDecoder(con)
+		err = gd.Decode(&oFrame)
+		if err != nil {
+			log.Fatal("RGS:", err)
+		}
+		renderQueue <- oFrame
+	}
+
 }
 
 func init() {
