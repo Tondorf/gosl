@@ -5,10 +5,12 @@ import (
 )
 
 type Handshake struct {
-	Client int
-	Name   string
+	ID int
+	//	Name   string
+	W int
+	H int
 }
 
 func (h Handshake) String() string {
-	return (h.Name + ": " + strconv.Itoa(h.Client))
+	return (strconv.Itoa(h.ID) + ": " + strconv.Itoa(h.W) + "×" + strconv.Itoa(h.H))
 }

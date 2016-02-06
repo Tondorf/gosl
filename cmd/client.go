@@ -30,7 +30,7 @@ var (
 func register(con net.Conn, id int) error {
 	w, h := 0, 0               //data.TestNC()
 	enc := gob.NewEncoder(con) // Encoder
-	err := enc.Encode(handshake{ID: id, H: h, W: w})
+	err := enc.Encode(data.Handshake{ID: id, H: h, W: w})
 	return err
 }
 
