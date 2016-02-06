@@ -2,7 +2,6 @@ package cmd // code.bitsetter.de/fun/gosl/cmd
 
 import (
 	"encoding/gob"
-	"fmt"
 	"log"
 	"net"
 	"sort"
