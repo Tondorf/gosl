@@ -6,7 +6,9 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 
 	"github.com/spf13/cobra"
 
@@ -42,6 +44,11 @@ func render() {
 func runClient(cmd *cobra.Command, args []string) {
 	data.InitNC()
 	defer data.ExitNC()
+
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	signal.Notify(c, syscall.SIGTERM)
+
 	fmt.Println("running client ...")
 
 	if len(args) < 1 {
@@ -58,13 +65,22 @@ func runClient(cmd *cobra.Command, args []string) {
 	register(con, id)
 
 	go render()
-	for {
+	run := true
+	for run {
+		// block until sigkill:
+		select {
+		case <-c:
+			// funzt noch nicht:
+			run = false
+		default:
+		}
 		var oFrame data.Frame
 		// always use new decoder - reusing may lead to errors
 		gd := gob.NewDecoder(con)
 		err = gd.Decode(&oFrame)
 		if err != nil {
-			log.Fatal("RGS:", err)
+			log.Println("RGS:", err)
+			run = false
 		}
 		renderQueue <- oFrame
 	}
