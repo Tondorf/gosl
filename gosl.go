@@ -1,9 +1,8 @@
 package main // code.bitsetter.de/fun/gosl
 
 import (
-	"runtime"
-
 	"code.bitsetter.de/fun/gosl/cmd"
+	"runtime"
 )
 
 func main() {

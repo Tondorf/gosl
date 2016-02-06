@@ -98,6 +98,6 @@ func init() {
 	CmdGosl.AddCommand(cmdServer)
 	cmdServer.Run = runServer
 
-	cmdServer.Flags().StringVarP(&LevelFile, "level", "l", "level.lvl", "Use specific levelfile")
+	cmdServer.Flags().StringVarP(&LevelFile, "level", "l", "default.lvl", "Use specific levelfile")
 	cmdServer.Flags().IntVarP(&ServerPort, "port", "p", 8090, "Run server on this port")
 }

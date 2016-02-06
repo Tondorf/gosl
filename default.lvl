@@ -1,0 +1,17 @@
+{
+
+	"Layers": [
+	  { "Z": 0, // Z-Level: 0 = frontmost
+
+	            //              ^
+	    "D": 6, // direction   789
+		        //           < 456 >
+				//             123
+				//              v    5 = no motion
+		"V": 1  // Characters / frame ()
+		        // TODO: H/V Ratio
+	    "data": "... base enc block" },
+	  { "Z": 1,
+	    "data": "..."}
+	]
+}
