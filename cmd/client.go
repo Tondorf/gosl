@@ -42,12 +42,13 @@ func render() {
 }
 
 func runClient(cmd *cobra.Command, args []string) {
-	data.InitNC()
-	defer data.ExitNC()
-
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, os.Kill)
 	signal.Notify(c, syscall.SIGTERM)
+
+	data.InitNC(c)
+	// really important???
+	defer data.ExitNC()
 
 	fmt.Println("running client ...")
 
@@ -67,13 +68,6 @@ func runClient(cmd *cobra.Command, args []string) {
 	go render()
 	run := true
 	for run {
-		// block until sigkill:
-		select {
-		case <-c:
-			// funzt noch nicht:
-			run = false
-		default:
-		}
 		var oFrame data.Frame
 		// always use new decoder - reusing may lead to errors
 		gd := gob.NewDecoder(con)
@@ -83,6 +77,16 @@ func runClient(cmd *cobra.Command, args []string) {
 			run = false
 		}
 		renderQueue <- oFrame
+
+		select {
+		case <-c:
+			// funzt noch nicht:
+			run = false
+		default:
+			if data.GetChar() != 0 {
+				data.ExitNC()
+			}
+		}
 	}
 
 }

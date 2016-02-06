@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	win *nc.Window
+	win    *nc.Window
+	ncquit = make(chan bool)
 )
 
 func RenderFrame(f *Frame) {
@@ -19,20 +20,36 @@ func RenderFrame(f *Frame) {
 	}
 }
 
-func InitNC() {
+func InitNC(killchan chan<- os.Signal) {
 	var err error
 	win, err = nc.Init()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
+	win.Timeout(1)
+	go func() {
+		select {
+		case <-ncquit:
+			log.Println("Exiting NC")
+			killchan <- os.Kill
+		}
+	}()
 }
 
 func ExitNC() {
 	//if win != nil {
-
-	//	}
 	nc.End()
+	ncquit <- true
+	//	}
+}
+
+func GetChar() int {
+	if win != nil {
+		k := win.GetChar()
+		return int(k)
+	}
+	return 0
 }
 
 func TestNC() (int, int) {

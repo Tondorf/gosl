@@ -68,11 +68,10 @@ func serveClients() {
 			if id > 0 {
 				enc := gob.NewEncoder(client.con)
 				enc.Encode(oFrame)
-				log.Println("ID:", id, "Client:", client)
-
+				//log.Println("ID:", id, "Client:", client)
 			}
 		}
-		time.Sleep(time.Second)
+		time.Sleep(time.Second / 25)
 	}
 }
 
