@@ -18,7 +18,7 @@ var (
 func RenderFrame(f *Frame) {
 	winMutex.Lock()
 	if win != nil {
-		win.Clear()
+		//win.Clear()
 		for k, _ := range f.Data {
 			win.MovePrint(k, 0, string(f.Data[k]))
 		}

@@ -13,4 +13,6 @@ func (lvl *Level) AddLayer(z int, l *Layer) {
 	lvl.Layers[z] = l
 }
 
-func LoadLevel(filename string) Level
+func LoadLevel(filename string) *Level {
+	return nil
+}

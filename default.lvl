@@ -1,5 +1,5 @@
 {
-
+    "FPS": 10,
 	"Layers": [
 	  { "Z": 0, // Z-Level: 0 = frontmost
 
@@ -10,8 +10,24 @@
 				//              v    5 = no motion
 		"V": 1  // Characters / frame ()
 		        // TODO: H/V Ratio
-	    "data": "... base enc block" },
+		"frames": [
+	      "data": "... base enc block"
+		]
+		}
 	  { "Z": 1,
 	    "data": "..."}
 	]
 }
+
+
+LevelDir
+ +-- Manifest        :)
+ +-- Layer 1
+ |    +-- Manifest   << layer dimension, orientation and speed, transparency char
+ |    +-- 1.frame    << text, unix style lf
+ |    +-- 2.frame
+ |    | …
+ |    +-- <n>.frame
+ +-- Layer 2
+ | …
+ +-- Layer <n>
