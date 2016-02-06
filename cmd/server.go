@@ -2,7 +2,6 @@ package cmd // code.bitsetter.de/fun/gosl/cmd
 
 import (
 	"encoding/gob"
-	"fmt"
 	"log"
 	"net"
 	"sort"
@@ -29,6 +28,10 @@ type goslClient struct {
 	h   int
 }
 
+var (
+	LevelFile  string
+	ServerPort int
+)
 var TotalWidth int = 0
 var clients map[int]goslClient = make(map[int]goslClient)
 var clientKeys []int = make([]int, 100)
@@ -52,7 +55,7 @@ func serveClients() {
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
-				fmt.Println("ID:", id, "Client:", client)
+				log.Println("ID:", id, "Client:", client)
 			}
 		}
 		time.Sleep(time.Second)
@@ -60,8 +63,8 @@ func serveClients() {
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	fmt.Println("running server ...")
-	listener, err := net.ListenTCP("tcp", &net.TCPAddr{Port: SERVERPORT})
+	log.Println("running server on port", ServerPort)
+	listener, err := net.ListenTCP("tcp", &net.TCPAddr{Port: ServerPort})
 	if err != nil {
 		log.Fatal(err)
 		panic("Could not open Listener")
@@ -79,5 +82,9 @@ func runServer(cmd *cobra.Command, args []string) {
 }
 
 func init() {
+	CmdGosl.AddCommand(cmdServer)
 	cmdServer.Run = runServer
+
+	cmdServer.Flags().StringVarP(&LevelFile, "level", "l", "level.lvl", "Use specific levelfile")
+	cmdServer.Flags().IntVarP(&ServerPort, "port", "p", 8090, "Run server on this port")
 }

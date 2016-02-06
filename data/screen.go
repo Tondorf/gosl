@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/rthornton128/goncurses"
+	nc "github.com/rthornton128/goncurses"
 )
 
 type Screen struct {
@@ -14,14 +14,15 @@ type Screen struct {
 }
 
 func TestNC() (int, int) {
-	win, err := goncurses.Init()
+	win, err := nc.Init()
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 	win.Clear()
 	h, w := win.MaxYX()
-	goncurses.End()
+	nc.End()
 	fmt.Printf("screen: %d x %d\n", w, h)
+
 	return w, h
 }
