@@ -1,6 +1,8 @@
 package cmd // code.bitsetter.de/fun/gosl/cmd
 
 import (
+	"bytes"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
@@ -38,6 +40,7 @@ type LayerManifest struct {
 	D      directionType `json:"Direction"`
 	S      int           `json:"Speed"`
 	T      string        `json:"Transparent"`
+	Repeat bool
 	Frames map[int]([][]rune)
 }
 
@@ -118,7 +121,10 @@ func compile(cmd *cobra.Command, args []string) {
 			}
 		}
 	}
-
+	obuf := &bytes.Buffer{}
+	enc := gob.NewEncoder(obuf)
+	enc.Encode(&lvlMan)
+	ioutil.WriteFile(levelFile, obuf.Bytes(), 0644)
 }
 
 func init() {
