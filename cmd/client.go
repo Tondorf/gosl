@@ -69,8 +69,7 @@ func runClient(cmd *cobra.Command, args []string) {
 	run := true
 	for run {
 		var oFrame data.Frame
-		// always use new decoder - reusing may lead to errors
-		gd := gob.NewDecoder(con)
+		gd := gob.NewDecoder(con) // always use new decoder
 		err = gd.Decode(&oFrame)
 		if err != nil {
 			log.Println("RGS:", err)
