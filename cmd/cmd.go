@@ -6,8 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type handshake struct{ ID, W, H int }
-
 var CmdGosl = &cobra.Command{
 	Use:   "gosl [command]",
 	Short: "Run a gosl instance",

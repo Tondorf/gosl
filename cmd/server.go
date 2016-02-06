@@ -39,7 +39,7 @@ var clients map[int]goslClient = make(map[int]goslClient)
 var clientKeys []int = make([]int, 100)
 
 func handleConn(conn *net.TCPConn) {
-	var hs handshake
+	var hs data.Handshake
 	log.Println("Got a connection!")
 	// handshake
 	dec := gob.NewDecoder(conn) // Decoder
