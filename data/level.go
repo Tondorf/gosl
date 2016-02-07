@@ -47,11 +47,11 @@ type Level struct {
 //}
 
 func LoadLevel(filename string) *Level {
-	log.Println("Loading lvl ", filename)
+	log.Println("Loading lvl", filename)
 	ret := &Level{}
 	file, err := os.Open(filename)
 	if err != nil {
-		log.Println("Error reading lvl: ", err)
+		log.Println("Error reading lvl:", err)
 		return nil
 	}
 	dec := gob.NewDecoder(file)
@@ -73,13 +73,9 @@ func (lvl *Level) Height() int {
 }
 
 func (lvl *Level) Width() (max int) {
-	max = 0
 	for _, lay := range lvl.Layers {
-		// lay is of type map[int]([][]rune)
 		for _, fra := range lay.Frames {
-			// fra is of type [][]rune
 			for _, fra2 := range fra {
-				// fra2 is of type []rune
 				if len(fra2) > max {
 					max = len(fra2)
 				}
@@ -89,8 +85,7 @@ func (lvl *Level) Width() (max int) {
 	return
 }
 
-func (lvl *Level) GetFrame(off, w, frame int) (ret *Frame) {
-	//log.Println(ret)
+func (lvl *Level) GetFrame(off, w, frameNo int) (ret *Frame) {
 	h := lvl.Height()
 
 	ret = &Frame{
@@ -98,13 +93,14 @@ func (lvl *Level) GetFrame(off, w, frame int) (ret *Frame) {
 		H: h,
 	}
 
-	for _, l := range lvl.Layers {
-		if l.Z == 0 {
-			for i := 0; i < h; i++ {
+	for _, layer := range lvl.Layers {
+		if layer.Z == 0 {
+			for row := 0; row < h; row++ {
 				ret.Data = append(ret.Data, []rune{})
-				f := (frame % len(l.Frames)) + 1
-				if i <= len(l.Frames[f]) {
-					ret.Data[i] = append(ret.Data[i], l.Frames[f][i]...)
+				f := (frameNo % len(layer.Frames)) + 1
+				if row <= len(layer.Frames[f]) {
+					//log.Println(len(layer.Frames[f][row]))
+					ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off:])...)
 				}
 			}
 		}

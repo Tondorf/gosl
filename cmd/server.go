@@ -28,6 +28,7 @@ type goslClient struct {
 	id  int
 	w   int
 	h   int
+	off int
 }
 
 /* GLOBAL SERVER STATE */
@@ -37,7 +38,11 @@ var (
 	ServerPort int
 	TotalWidth int                = 0
 	clients    map[int]goslClient = make(map[int]goslClient)
-	clientKeys []int              = make([]int, 100)
+	clientKeys []int              = make([]int, 0)
+	// big server canvas
+	canvas       [][]rune
+	canvasX      int
+	frameCounter int = 0
 )
 
 func handleConn(conn *net.TCPConn) {
@@ -46,22 +51,40 @@ func handleConn(conn *net.TCPConn) {
 	dec := gob.NewDecoder(conn)
 	dec.Decode(&hs) // decode handshake
 	log.Println("Got client! ID:", hs.ID, "dimensions:", hs.W, hs.H)
+	// memorize client in server state
 	clientKeys = append(clientKeys, hs.ID)
 	sort.Ints(clientKeys)
 	clients[hs.ID] = goslClient{con: conn, id: hs.ID, w: hs.W, h: hs.H}
 	TotalWidth += hs.W
-	// conn.Close()
+	// reset server
+	resetServer()
+}
+
+func resetServer() {
+	// adjust canvas width
+	canvasX = 0
+	for _, k := range clientKeys {
+		_, client := k, clients[k]
+		canvasX += client.w
+	}
+	canvasX += level.Width()
+	// adjust client offsets
+	off := 0
+	for _, k := range clientKeys {
+		_, client := k, clients[k]
+		client.off = off
+		off += client.w
+	}
 }
 
 func serveClients() {
 	level = data.LoadLevel(LevelFile)
-	log.Println("canvas X:", canvasX())
-	fCounter := 0
+	frameCounter = 0
 	for { // while true
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
-				oFrame := level.GetFrame(0, client.w, fCounter)
+				oFrame := level.GetFrame(0+frameCounter, client.w, frameCounter)
 				enc := gob.NewEncoder(client.con)
 				err := enc.Encode(oFrame)
 				if err != nil {
@@ -79,13 +102,13 @@ func serveClients() {
 				//log.Println("ID:", id, "Client:", client)
 			}
 		}
-		fCounter++
+		frameCounter++
 		time.Sleep(time.Second / time.Duration(level.FPS))
 	}
 }
 
 func runServer(cmd *cobra.Command, args []string) {
-	log.Println("running server on port", ServerPort)
+	log.Println("Running server on port", ServerPort)
 	listener, err := net.ListenTCP("tcp", &net.TCPAddr{Port: ServerPort})
 	if err != nil {
 		log.Fatal(err)
@@ -109,14 +132,4 @@ func init() {
 
 	cmdServer.Flags().StringVarP(&LevelFile, "level", "l", "default.lvl", "Use specific levelfile")
 	cmdServer.Flags().IntVarP(&ServerPort, "port", "p", 8090, "Run server on this port")
-}
-
-func canvasX() (x int) {
-	x = 0
-	for _, k := range clientKeys {
-		_, client := k, clients[k]
-		x += client.w
-	}
-	x += level.Width()
-	return
 }
