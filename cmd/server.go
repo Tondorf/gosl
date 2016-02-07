@@ -60,7 +60,7 @@ func serveClients() {
 			id, client := k, clients[k]
 			if id > 0 {
 				oFrame := World.GetFrame(0, client.w, fCounter)
-				fCounter++
+
 				enc := gob.NewEncoder(client.con)
 				err := enc.Encode(oFrame)
 				if err != nil {
@@ -78,6 +78,7 @@ func serveClients() {
 				//log.Println("ID:", id, "Client:", client)
 			}
 		}
+		fCounter++
 		time.Sleep(time.Second / time.Duration(World.FPS))
 	}
 }
