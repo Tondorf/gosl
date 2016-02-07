@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"log"
 	"os"
+	//"sort"
 )
 
 type directionType int
@@ -60,6 +61,7 @@ func LoadLevel(filename string) *Level {
 	return ret
 }
 
+// that's a func
 func (lvl *Level) Height() int {
 	max := 0
 	for _, l := range lvl.Layers {
@@ -72,6 +74,7 @@ func (lvl *Level) Height() int {
 	return max
 }
 
+// this is a func also ;)
 func (lvl *Level) Width() (max int) {
 	for _, lay := range lvl.Layers {
 		for _, fra := range lay.Frames {
@@ -85,6 +88,7 @@ func (lvl *Level) Width() (max int) {
 	return
 }
 
+//testcomment
 func (lvl *Level) GetFrame(off, w, frameNo int) (ret *Frame) {
 	h := lvl.Height()
 
@@ -92,15 +96,20 @@ func (lvl *Level) GetFrame(off, w, frameNo int) (ret *Frame) {
 		W: w,
 		H: h,
 	}
+	var mdata = make([]rune, w*h)
+	for y := 0; y < h; y++ {
+		ret.Data = append(ret.Data, mdata[y*w:(y+1)*w])
+	}
 
 	for _, layer := range lvl.Layers {
 		if layer.Z == 0 {
 			for row := 0; row < h; row++ {
-				ret.Data = append(ret.Data, []rune{})
+				//ret.Data = append(ret.Data, []rune{})
 				f := (frameNo % len(layer.Frames)) + 1
 				if row <= len(layer.Frames[f]) {
+					//for col := 0
 					//log.Println(len(layer.Frames[f][row]))
-					ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off:])...)
+					//ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off%w:])...)
 				}
 			}
 		}

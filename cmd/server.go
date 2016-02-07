@@ -74,6 +74,7 @@ func resetServer() {
 		_, client := k, clients[k]
 		client.off = off
 		off += client.w
+		off += 10
 	}
 }
 
@@ -85,7 +86,7 @@ func serveClients() {
 			for _, k := range clientKeys {
 				id, client := k, clients[k]
 				if id > 0 {
-					oFrame := level.GetFrame(0+frameCounter, client.w, frameCounter)
+					oFrame := level.GetFrame(client.off, client.w, frameCounter)
 					enc := gob.NewEncoder(client.con)
 					err := enc.Encode(oFrame)
 					if err != nil {

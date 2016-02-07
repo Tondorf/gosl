@@ -79,7 +79,6 @@ func runClient(cmd *cobra.Command, args []string) {
 
 		select {
 		case _ = <-osChan:
-			// funzt noch nicht:
 			log.Println("Got a KILL")
 			con.Close()
 			close(renderQueue)

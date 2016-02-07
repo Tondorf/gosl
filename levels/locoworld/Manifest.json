@@ -1,6 +1,6 @@
 {
   "Name": "The locomotive!",
-  "FPS": 10,
+  "FPS": 25,
   "Layers" : {
     "locomotive": {
       "Z-Index": 0,
