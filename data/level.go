@@ -72,6 +72,23 @@ func (lvl *Level) Height() int {
 	return max
 }
 
+func (lvl *Level) Width() (max int) {
+	max = 0
+	for _, lay := range lvl.Layers {
+		// lay is of type map[int]([][]rune)
+		for _, fra := range lay.Frames {
+			// fra is of type [][]rune
+			for _, fra2 := range fra {
+				// fra2 is of type []rune
+				if len(fra2) > max {
+					max = len(fra2)
+				}
+			}
+		}
+	}
+	return
+}
+
 func (lvl *Level) GetFrame(off, w, frame int) (ret *Frame) {
 	//log.Println(ret)
 	h := lvl.Height()

@@ -18,7 +18,7 @@ var cmdServer = &cobra.Command{
 	Long: `Runs Gosl as a server
 
 [TODO:]
-gosl.json for configuration (Port/Adress, Level)
+gosl.json for configuration (Port/Address, Level)
 `,
 	//	Run:
 }
@@ -30,14 +30,15 @@ type goslClient struct {
 	h   int
 }
 
+/* GLOBAL SERVER STATE */
 var (
 	LevelFile  string
-	World      *data.Level
+	level      *data.Level
 	ServerPort int
+	TotalWidth int                = 0
+	clients    map[int]goslClient = make(map[int]goslClient)
+	clientKeys []int              = make([]int, 100)
 )
-var TotalWidth int = 0
-var clients map[int]goslClient = make(map[int]goslClient)
-var clientKeys []int = make([]int, 100)
 
 func handleConn(conn *net.TCPConn) {
 	var hs data.Handshake
@@ -53,14 +54,14 @@ func handleConn(conn *net.TCPConn) {
 }
 
 func serveClients() {
-	World = data.LoadLevel(LevelFile)
+	level = data.LoadLevel(LevelFile)
+	log.Println("canvas X:", canvasX())
 	fCounter := 0
 	for { // while true
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
-				oFrame := World.GetFrame(0, client.w, fCounter)
-
+				oFrame := level.GetFrame(0, client.w, fCounter)
 				enc := gob.NewEncoder(client.con)
 				err := enc.Encode(oFrame)
 				if err != nil {
@@ -79,7 +80,7 @@ func serveClients() {
 			}
 		}
 		fCounter++
-		time.Sleep(time.Second / time.Duration(World.FPS))
+		time.Sleep(time.Second / time.Duration(level.FPS))
 	}
 }
 
@@ -108,4 +109,14 @@ func init() {
 
 	cmdServer.Flags().StringVarP(&LevelFile, "level", "l", "default.lvl", "Use specific levelfile")
 	cmdServer.Flags().IntVarP(&ServerPort, "port", "p", 8090, "Run server on this port")
+}
+
+func canvasX() (x int) {
+	x = 0
+	for _, k := range clientKeys {
+		_, client := k, clients[k]
+		x += client.w
+	}
+	x += level.Width()
+	return
 }
