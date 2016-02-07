@@ -9,5 +9,5 @@
 CC=gcc
 CFLAGS=-O
 
-sl: sl.c sl.h
+sl: sl.c
 	$(CC) $(CFLAGS) -o sl sl.c -lncurses

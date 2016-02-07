@@ -58,7 +58,6 @@
 #include <curses.h>
 #include <signal.h>
 #include <unistd.h>
-#include "sl.h"
 
 int my_mvaddstr(int y, int x, char *str) {
     for ( ; x < 0; ++x, ++str)
