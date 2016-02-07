@@ -32,6 +32,7 @@ type goslClient struct {
 
 var (
 	LevelFile  string
+	World      *data.Level
 	ServerPort int
 )
 var TotalWidth int = 0
@@ -41,8 +42,9 @@ var clientKeys []int = make([]int, 100)
 func handleConn(conn *net.TCPConn) {
 	var hs data.Handshake
 	log.Println("Got a connection!")
-	dec := gob.NewDecoder(conn)
-	dec.Decode(&hs) // decode handshake
+	// handshake
+	dec := gob.NewDecoder(conn) // Decoder
+	dec.Decode(&hs)
 	log.Println("Got client! ID:", hs.ID, "dimensions:", hs.W, hs.H)
 	clientKeys = append(clientKeys, hs.ID)
 	sort.Ints(clientKeys)
@@ -52,6 +54,7 @@ func handleConn(conn *net.TCPConn) {
 }
 
 func serveClients() {
+	World = data.LoadLevel(LevelFile)
 	var oFrame = data.Frame{
 		1, 10,
 		[][]rune{
@@ -66,23 +69,8 @@ func serveClients() {
 			id, client := k, clients[k]
 			if id > 0 {
 				enc := gob.NewEncoder(client.con)
-				err := enc.Encode(oFrame)
-				if err != nil {
-					// client disconnected
+				enc.Encode(oFrame)
 
-					//log.Println("BEFORE remove: clients:", clients, " clientKeys:", clientKeys)
-
-					// delete client
-					delete(clients, client.id)
-
-					// delete client key
-					// ugly as fuck in go to remove from a slice
-					// it *should* work though
-					idInKeys := sort.SearchInts(clientKeys, client.id)
-					clientKeys = append(clientKeys[:idInKeys], clientKeys[idInKeys+1:]...)
-
-					//log.Println("AFTER remove: clients:", clients, " clientKeys:", clientKeys)
-				}
 				//log.Println("ID:", id, "Client:", client)
 			}
 		}
