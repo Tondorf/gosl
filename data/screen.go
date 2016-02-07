@@ -19,8 +19,10 @@ func RenderFrame(f *Frame) {
 	winMutex.Lock()
 	if win != nil {
 		//win.Clear()
+		winY, _ := win.MaxYX()
+		yOff := (winY - f.H) / 2
 		for k, _ := range f.Data {
-			win.MovePrint(k, 0, string(f.Data[k]))
+			win.MovePrint(yOff+k, 0, string(f.Data[k]))
 		}
 	}
 	winMutex.Unlock()
@@ -65,7 +67,7 @@ func GetChar() int {
 	return 0
 }
 
-func testNC() (int, int) {
+func GetXY() (int, int) {
 	win, err := nc.Init()
 	if err != nil {
 		log.Fatal(err)

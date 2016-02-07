@@ -28,7 +28,7 @@ var (
 )
 
 func register(con net.Conn, id int) error {
-	w, h := 0, 0               //data.TestNC()
+	w, h := data.GetXY()
 	enc := gob.NewEncoder(con) // Encoder
 	err := enc.Encode(data.Handshake{ID: id, H: h, W: w})
 	return err
@@ -42,11 +42,11 @@ func render() {
 }
 
 func runClient(cmd *cobra.Command, args []string) {
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, os.Kill)
-	signal.Notify(c, syscall.SIGTERM)
+	osChan := make(chan os.Signal)
+	signal.Notify(osChan, os.Interrupt, os.Kill)
+	signal.Notify(osChan, syscall.SIGTERM)
 
-	data.InitNC(c)
+	data.InitNC(osChan)
 	// really important???
 	defer data.ExitNC()
 
@@ -78,7 +78,7 @@ func runClient(cmd *cobra.Command, args []string) {
 		renderQueue <- oFrame
 
 		select {
-		case <-c:
+		case _ = <-osChan:
 			// funzt noch nicht:
 			log.Println("Got a KILL")
 			con.Close()
