@@ -1,4 +1,4 @@
-{ 
+{
   "Name": "The locomotive!",
   "FPS": 10,
   "Layers" : {
@@ -8,13 +8,7 @@
       "Speed": 2,
       "Repeat": false,
       "Transparent": "•"
-    },
-    "background": {
-      "Z-Index": 1,
-      "Direction": 6,
-      "Speed": 1,
-      "Repeat": true,
-      "Transparent": "•"
     }
+
   }
 }

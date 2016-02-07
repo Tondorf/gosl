@@ -54,41 +54,31 @@ func handleConn(conn *net.TCPConn) {
 
 func serveClients() {
 	World = data.LoadLevel(LevelFile)
-	var oFrame = data.Frame{
-		1, 10,
-		[][]rune{
-			[]rune("hallo"),
-			[]rune("das"),
-			[]rune("ist"),
-			[]rune("einTest"),
-		},
-	}
+	fCounter := 0
 	for { // while true
 		for _, k := range clientKeys {
 			id, client := k, clients[k]
 			if id > 0 {
+				oFrame := World.GetFrame(0, client.w, fCounter)
+				fCounter++
 				enc := gob.NewEncoder(client.con)
 				err := enc.Encode(oFrame)
 				if err != nil {
 					// client disconnected
-
 					//log.Println("BEFORE remove: clients:", clients, " clientKeys:", clientKeys)
-
 					// delete client
 					delete(clients, client.id)
-
 					// delete client key
 					// ugly as fuck in go to remove from a slice
 					// it *should* work though
 					idInKeys := sort.SearchInts(clientKeys, client.id)
 					clientKeys = append(clientKeys[:idInKeys], clientKeys[idInKeys+1:]...)
-
 					//log.Println("AFTER remove: clients:", clients, " clientKeys:", clientKeys)
 				}
 				//log.Println("ID:", id, "Client:", client)
 			}
 		}
-		time.Sleep(time.Second / 25)
+		time.Sleep(time.Second / time.Duration(World.FPS))
 	}
 }
 

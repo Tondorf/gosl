@@ -59,3 +59,39 @@ func LoadLevel(filename string) *Level {
 	//log.Println(ret.Layers["locomotive"])
 	return ret
 }
+
+func (lvl *Level) Height() int {
+	max := 0
+	for _, l := range lvl.Layers {
+		for _, f := range l.Frames {
+			if len(f) > max {
+				max = len(f)
+			}
+		}
+	}
+	return max
+}
+
+func (lvl *Level) GetFrame(off, w, frame int) (ret *Frame) {
+	//log.Println(ret)
+	h := lvl.Height()
+
+	ret = &Frame{
+		W: w,
+		H: h,
+	}
+
+	for _, l := range lvl.Layers {
+		if l.Z == 0 {
+			for i := 0; i < h; i++ {
+				ret.Data = append(ret.Data, []rune{})
+				f := (frame % len(l.Frames)) + 1
+				if i <= len(l.Frames[f]) {
+					ret.Data[i] = append(ret.Data[i], l.Frames[f][i]...)
+				}
+			}
+		}
+	}
+
+	return
+}
