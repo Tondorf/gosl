@@ -23,7 +23,7 @@ gosl.json for configuration (Port/Address, Level)
 	//	Run:
 }
 
-const ClientOffset = 10
+const ClientOffset = 0
 
 type goslClient struct {
 	con *net.TCPConn

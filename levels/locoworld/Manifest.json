@@ -5,10 +5,16 @@
     "locomotive": {
       "Z-Index": 0,
       "Direction": 4,
-      "Speed": 1,
+      "Speed": 3,
       "Repeat": false,
       "Transparent": "•"
+    },
+    "ground": {
+      "Z-Index": 1,
+      "Direction": 6,
+      "Speed": 1,
+      "Repeat": true,
+      "Transparent": "ä"
     }
-
   }
 }

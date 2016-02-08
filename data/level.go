@@ -4,7 +4,7 @@ import (
 	"encoding/gob"
 	"log"
 	"os"
-	//"sort"
+	"sort"
 )
 
 type directionType int
@@ -41,6 +41,7 @@ type Level struct {
 	Name   string
 	FPS    int
 	Layers map[string]*Layer
+	lorder []zString // ordered key list (by z index)
 }
 
 //func (lvl *Level) AddLayer(z int, l *Layer) {
@@ -100,8 +101,31 @@ func (lvl *Level) Width() (max int) {
 	return
 }
 
+// Implement Sorter
+type zString struct {
+	id string
+	z  int
+}
+type ByZ []zString
+
+func (a ByZ) Len() int           { return 1 }
+func (a ByZ) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByZ) Less(i, j int) bool { return a[i].z < a[j].z }
+
+func (lvl *Level) initOrder() {
+	if lvl.lorder == nil {
+		lvl.lorder = []zString{}
+		for k, v := range lvl.Layers {
+			lvl.lorder = append(lvl.lorder, zString{k, v.Z})
+		}
+		sort.Sort(ByZ(lvl.lorder))
+		sort.Reverse(ByZ(lvl.lorder))
+	}
+}
+
 //testcomment
 func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
+	lvl.initOrder()
 	h := lvl.Height()
 
 	ret = &Frame{
@@ -116,50 +140,54 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 		ret.Data = append(ret.Data, mdata[y*w:(y+1)*w])
 	}
 
-	for _, layer := range lvl.Layers {
-		if layer.Z == 0 {
-			for row := 0; row < h; row++ {
-				//ret.Data = append(ret.Data, []rune{})
+	for zli, zl := range lvl.lorder {
+		layer := lvl.Layers[zl.id]
+		//for _, layer := range lvl.Layers {
+		//if layer.Z == 0 {
+		for row := 0; row < h; row++ {
+			//ret.Data = append(ret.Data, []rune{})
 
-				// which frame of the layer to use
-				f := (frameNo % len(layer.Frames)) + 1
-				off := 0
-				switch layer.D {
-				case 4:
-					off = (frameNo * layer.S) + o
-				case 6:
-					off = -(frameNo * layer.S) + o
-				}
+			// which frame of the layer to use
+			f := (frameNo % len(layer.Frames)) + 1
+			off := 0
+			switch layer.D {
+			case 4:
+				off = (frameNo * layer.S) + o
+			case 6:
+				off = -(frameNo * layer.S) + o
+			}
 
-				// max width
-				lW := layer.Width()
-				if !layer.Repeat {
-					lW += maxW
-					off += maxW
-				}
+			// max width
+			lW := layer.Width()
+			if !layer.Repeat {
+				lW += maxW
+				off += maxW
+			}
 
-				for off < 0 {
-					off += lW
-				}
-				off %= lW
-				log.Println(lW, off, o, w, maxW, frameNo)
-				if row < len(layer.Frames[f]) {
-					r := layer.Frames[f][row][:]
-					for col := 0; col < w; col++ {
-						ro := (off + col) % lW
+			for off < 0 {
+				off += lW
+			}
+			off %= lW
+			log.Println(lW, off, o, w, maxW, frameNo)
+			if row < len(layer.Frames[f]) {
+				r := layer.Frames[f][row][:]
+				for col := 0; col < w; col++ {
+					ro := (off + col) % lW
 
-						if 0 < ro && ro < len(r) && string(r[ro]) != layer.T {
-							ret.Data[row][col] = r[ro]
-						} else {
+					if 0 < ro && ro < len(r) && string(r[ro]) != layer.T {
+						ret.Data[row][col] = r[ro]
+					} else {
+						if zli == 0 {
 							ret.Data[row][col] = rune(' ')
 						}
 					}
-					//for col := 0
-					//log.Println(len(layer.Frames[f][row]))
-					//ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off%w:])...)
 				}
+				//for col := 0
+				//log.Println(len(layer.Frames[f][row]))
+				//ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off%w:])...)
 			}
 		}
+		//}
 	}
 
 	return
