@@ -126,21 +126,32 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 				off := 0
 				switch layer.D {
 				case 4:
-					off = -(frameNo * layer.S) + o
-				case 6:
 					off = (frameNo * layer.S) + o
+				case 6:
+					off = -(frameNo * layer.S) + o
 				}
+
+				// max width
+				lW := layer.Width()
+				if !layer.Repeat {
+					lW += maxW
+					off += maxW
+				}
+
 				for off < 0 {
-					off += layer.Width()
+					off += lW
 				}
-				off %= maxW //layer.Width()
-				if row <= len(layer.Frames[f]) {
+				off %= lW
+				log.Println(lW, off, o, w, maxW, frameNo)
+				if row < len(layer.Frames[f]) {
 					r := layer.Frames[f][row][:]
 					for col := 0; col < w; col++ {
-						ro := (off + col) % layer.Width()
+						ro := (off + col) % lW
 
-						if (ro) < len(r) && string(r[ro]) != layer.T {
+						if 0 < ro && ro < len(r) && string(r[ro]) != layer.T {
 							ret.Data[row][col] = r[ro]
+						} else {
+							ret.Data[row][col] = rune(' ')
 						}
 					}
 					//for col := 0

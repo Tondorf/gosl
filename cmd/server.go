@@ -69,7 +69,7 @@ func resetServer() {
 		_, client := k, clients[k]
 		canvasX += client.w + ClientOffset
 	}
-	canvasX += level.Width()
+	//canvasX += level.Width()
 	// adjust client offsets
 	off := 0
 	for _, k := range clientKeys {

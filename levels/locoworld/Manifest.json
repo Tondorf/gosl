@@ -4,7 +4,7 @@
   "Layers" : {
     "locomotive": {
       "Z-Index": 0,
-      "Direction": 6,
+      "Direction": 4,
       "Speed": 1,
       "Repeat": false,
       "Transparent": "•"
