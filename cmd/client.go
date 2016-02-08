@@ -46,24 +46,29 @@ func runClient(cmd *cobra.Command, args []string) {
 	signal.Notify(osChan, os.Interrupt, os.Kill)
 	signal.Notify(osChan, syscall.SIGTERM)
 
-	data.InitNC(osChan)
-	// really important???
-	defer data.ExitNC()
-
-	fmt.Println("running client ...")
+	//fmt.Println("Running client ...")
 
 	if len(args) < 1 {
-		fmt.Println("Params: <NUMBER>")
+		fmt.Println("Usage: gosl", cmdClient.Use)
 		os.Exit(1)
 	}
-	id, _ := strconv.Atoi(args[0])
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		fmt.Println("Error parsing client ID!")
+		os.Exit(1)
+	}
 
 	con, err := net.Dial("tcp", ServerHost+":"+strconv.Itoa(ServerPort))
 	if err != nil {
-		fmt.Println("connect error:", err)
+		fmt.Println("CONNECT ERROR:", err)
+		os.Exit(1)
 	}
 	defer con.Close()
 	register(con, id)
+
+	data.InitNC(osChan)
+	// really important???
+	defer data.ExitNC()
 
 	go render()
 	run := true
