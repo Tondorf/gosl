@@ -133,7 +133,7 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 				for off < 0 {
 					off += layer.Width()
 				}
-				off %= layer.Width()
+				off %= maxW //layer.Width()
 				if row <= len(layer.Frames[f]) {
 					r := layer.Frames[f][row][:]
 					for col := 0; col < w; col++ {
