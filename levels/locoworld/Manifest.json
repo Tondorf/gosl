@@ -23,6 +23,7 @@
 	  "Direction": 6,
 	  "Speed": 2,
 	  "Repeat": false,
+	  "V-Offset": 16,
 	  "Transparent": " "
 	},
 	"fixed": {
