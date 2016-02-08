@@ -31,6 +31,14 @@
 	  "Speed": 2,
 	  "Repeat": true,
 	  "Transparent": " "
+	},
+	"overlay": {
+		"Z-Index": 10,
+		"Direction": 0,
+		"Speed": 0,
+		"Repeat": false,
+		"V-Offset": 25,
+		"Transparent" : " "
 	}
   }
 }

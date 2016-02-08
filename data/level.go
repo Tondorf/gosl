@@ -69,7 +69,7 @@ func (lvl *Level) Height() int {
 	for _, l := range lvl.Layers {
 		for _, f := range l.Frames {
 			if (len(f) + l.V) > max {
-				max = len(f)
+				max = len(f) + l.V
 			}
 		}
 	}
@@ -164,7 +164,9 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 			lW := layer.Width()
 			if !layer.Repeat {
 				lW += maxW
-				off += maxW
+				if layer.D != 0 {
+					off += maxW
+				}
 			}
 
 			for off < 0 {
