@@ -5,7 +5,7 @@
     "locomotive": {
       "Z-Index": 0,
       "Direction": 6,
-      "Speed": 2,
+      "Speed": 1,
       "Repeat": false,
       "Transparent": "•"
     }

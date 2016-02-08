@@ -23,6 +23,8 @@ gosl.json for configuration (Port/Address, Level)
 	//	Run:
 }
 
+const ClientOffset = 10
+
 type goslClient struct {
 	con *net.TCPConn
 	id  int
@@ -36,11 +38,11 @@ var (
 	LevelFile  string
 	level      *data.Level
 	ServerPort int
-	TotalWidth int                = 0
-	clients    map[int]goslClient = make(map[int]goslClient)
-	clientKeys []int              = make([]int, 0)
+	TotalWidth int                 = 0
+	clients    map[int]*goslClient = make(map[int]*goslClient)
+	clientKeys []int               = make([]int, 0)
 	// big server canvas
-	canvas       [][]rune
+	//canvas       [][]rune
 	canvasX      int
 	frameCounter int = 0
 )
@@ -54,7 +56,7 @@ func handleConn(conn *net.TCPConn) {
 	// memorize client in server state
 	clientKeys = append(clientKeys, hs.ID)
 	sort.Ints(clientKeys)
-	clients[hs.ID] = goslClient{con: conn, id: hs.ID, w: hs.W, h: hs.H}
+	clients[hs.ID] = &goslClient{con: conn, id: hs.ID, w: hs.W, h: hs.H}
 	TotalWidth += hs.W
 	// reset server
 	resetServer()
@@ -62,19 +64,18 @@ func handleConn(conn *net.TCPConn) {
 
 func resetServer() {
 	// adjust canvas width
-	canvasX = 0
+	canvasX = -1 * ClientOffset
 	for _, k := range clientKeys {
 		_, client := k, clients[k]
-		canvasX += client.w
+		canvasX += client.w + ClientOffset
 	}
 	canvasX += level.Width()
 	// adjust client offsets
 	off := 0
 	for _, k := range clientKeys {
-		_, client := k, clients[k]
-		client.off = off
-		off += client.w
-		off += 10
+		clients[k].off = off
+		off += clients[k].w
+		off += ClientOffset
 	}
 }
 
@@ -86,7 +87,7 @@ func serveClients() {
 			for _, k := range clientKeys {
 				id, client := k, clients[k]
 				if id > 0 {
-					oFrame := level.GetFrame(client.off, client.w, frameCounter)
+					oFrame := level.GetFrame(client.off, client.w, canvasX, frameCounter)
 					enc := gob.NewEncoder(client.con)
 					err := enc.Encode(oFrame)
 					if err != nil {
@@ -100,8 +101,10 @@ func serveClients() {
 						idInKeys := sort.SearchInts(clientKeys, client.id)
 						clientKeys = append(clientKeys[:idInKeys], clientKeys[idInKeys+1:]...)
 						//log.Println("AFTER remove: clients:", clients, " clientKeys:", clientKeys)
+						resetServer()
 					}
 					//log.Println("ID:", id, "Client:", client)
+
 				}
 			}
 			frameCounter++

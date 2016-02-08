@@ -17,7 +17,7 @@ const (
 	DIR_W                         //  W  4 5 6  E
 	DIR_NONE                      //     1 2 3
 	DIR_E                         //  SW   S   SE
-	DIR_NW
+	DIR_NW                        //  only 4,5,6 supported
 	DIR_N
 	DIR_NE
 )
@@ -74,7 +74,19 @@ func (lvl *Level) Height() int {
 	return max
 }
 
-// this is a func also ;)
+func (l *Layer) Width() (max int) {
+	max = 0
+	for _, frame := range l.Frames {
+		for _, row := range frame {
+			if len(row) > max {
+				max = len(row)
+			}
+		}
+	}
+	return
+}
+
+// Funzt so nicht: Layer liegen nicht zwingend übereinander
 func (lvl *Level) Width() (max int) {
 	for _, lay := range lvl.Layers {
 		for _, fra := range lay.Frames {
@@ -89,15 +101,18 @@ func (lvl *Level) Width() (max int) {
 }
 
 //testcomment
-func (lvl *Level) GetFrame(off, w, frameNo int) (ret *Frame) {
+func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 	h := lvl.Height()
 
 	ret = &Frame{
 		W: w,
 		H: h,
 	}
+
+	// generate an array by initializing a slice and …
 	var mdata = make([]rune, w*h)
 	for y := 0; y < h; y++ {
+		// … let the resulting Frame data point into it:
 		ret.Data = append(ret.Data, mdata[y*w:(y+1)*w])
 	}
 
@@ -105,8 +120,29 @@ func (lvl *Level) GetFrame(off, w, frameNo int) (ret *Frame) {
 		if layer.Z == 0 {
 			for row := 0; row < h; row++ {
 				//ret.Data = append(ret.Data, []rune{})
+
+				// which frame of the layer to use
 				f := (frameNo % len(layer.Frames)) + 1
+				off := 0
+				switch layer.D {
+				case 4:
+					off = -(frameNo * layer.S) + o
+				case 6:
+					off = (frameNo * layer.S) + o
+				}
+				for off < 0 {
+					off += layer.Width()
+				}
+				off %= layer.Width()
 				if row <= len(layer.Frames[f]) {
+					r := layer.Frames[f][row][:]
+					for col := 0; col < w; col++ {
+						ro := (off + col) % layer.Width()
+
+						if (ro) < len(r) && string(r[ro]) != layer.T {
+							ret.Data[row][col] = r[ro]
+						}
+					}
 					//for col := 0
 					//log.Println(len(layer.Frames[f][row]))
 					//ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off%w:])...)
