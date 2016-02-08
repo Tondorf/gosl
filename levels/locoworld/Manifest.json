@@ -3,7 +3,7 @@
   "FPS": 25,
   "Layers" : {
     "locomotive": {
-      "Z-Index": 0,
+      "Z-Index": 2,
       "Direction": 4,
       "Speed": 3,
       "Repeat": false,

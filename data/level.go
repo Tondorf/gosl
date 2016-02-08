@@ -168,7 +168,7 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 				off += lW
 			}
 			off %= lW
-			log.Println(lW, off, o, w, maxW, frameNo)
+			// log.Println(lW, off, o, w, maxW, frameNo)
 			if row < len(layer.Frames[f]) {
 				r := layer.Frames[f][row][:]
 				for col := 0; col < w; col++ {
@@ -185,6 +185,12 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 				//for col := 0
 				//log.Println(len(layer.Frames[f][row]))
 				//ret.Data[row] = append(ret.Data[row], (layer.Frames[f][row][off%w:])...)
+			} else {
+				if zli == 0 {
+					for col := 0; col < w; col++ {
+						ret.Data[row][col] = rune(' ')
+					}
+				}
 			}
 		}
 		//}
