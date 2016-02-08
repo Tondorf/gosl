@@ -33,6 +33,7 @@ type Layer struct {
 	D      directionType `json:"Direction"`
 	S      int           `json:"Speed"`
 	T      string        `json:"Transparent"`
+	V      int           `json:"V-Offset"`
 	Repeat bool
 	Frames map[int]([][]rune)
 }
@@ -67,7 +68,7 @@ func (lvl *Level) Height() int {
 	max := 0
 	for _, l := range lvl.Layers {
 		for _, f := range l.Frames {
-			if len(f) > max {
+			if (len(f) + l.V) > max {
 				max = len(f)
 			}
 		}
@@ -108,7 +109,7 @@ type zString struct {
 }
 type ByZ []zString
 
-func (a ByZ) Len() int           { return 1 }
+func (a ByZ) Len() int           { return len(a) }
 func (a ByZ) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByZ) Less(i, j int) bool { return a[i].z < a[j].z }
 
