@@ -3,22 +3,23 @@
   "FPS": 25,
   "Layers" : {
     "locomotive": {
-      "Z-Index": 2,
+      "Z-Index": 1,
       "Direction": 4,
       "Speed": 3,
 	  "V-Offset": 7,
       "Repeat": false,
-      "Transparent": " "
+      "Transparent": "x"
     },
     "ground": {
-      "Z-Index": 1,
+      "Z-Index": 2,
       "Direction": 6,
       "Speed": 1,
+	  "V-Offset": 15,
       "Repeat": true,
       "Transparent": " "
     },
 	"front" : {
-	  "Z-Index": 0,
+	  "Z-Index": 3,
 	  "Direction": 6,
 	  "Speed": 2,
 	  "Repeat": false,

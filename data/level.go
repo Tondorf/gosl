@@ -154,6 +154,8 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 			switch layer.D {
 			case 4:
 				off = (frameNo * layer.S) + o
+			case 5:
+				off = o
 			case 6:
 				off = -(frameNo * layer.S) + o
 			}
@@ -176,10 +178,10 @@ func (lvl *Level) GetFrame(o, w, maxW, frameNo int) (ret *Frame) {
 					ro := (off + col) % lW
 
 					if 0 < ro && ro < len(r) && string(r[ro]) != layer.T {
-						ret.Data[row][col] = r[ro]
+						ret.Data[row+layer.V][col] = r[ro]
 					} else {
 						if zli == 0 {
-							ret.Data[row][col] = rune(' ')
+							ret.Data[row+layer.V][col] = rune(' ')
 						}
 					}
 				}
