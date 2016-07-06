@@ -1,45 +1,45 @@
 {
-  "Name": "The locomotive!",
-  "FPS": 25,
-  "Layers" : {
-    "locomotive": {
-      "Z-Index": 1,
-      "Direction": 4,
-      "Speed": 3,
-	  "V-Offset": 7,
-      "Repeat": false,
-      "Transparent": "x"
-    },
-    "ground": {
-      "Z-Index": 2,
-      "Direction": 6,
-      "Speed": 1,
-	  "V-Offset": 15,
-      "Repeat": true,
-      "Transparent": " "
-    },
-	"front" : {
-	  "Z-Index": 3,
-	  "Direction": 6,
-	  "Speed": 2,
-	  "Repeat": false,
-	  "V-Offset": 16,
-	  "Transparent": " "
-	},
-	"fixed": {
-	  "Z-Index": 0,
-	  "Direction": 5,
-	  "Speed": 2,
-	  "Repeat": true,
-	  "Transparent": " "
-	},
-	"overlay": {
-		"Z-Index": 10,
-		"Direction": 0,
-		"Speed": 0,
-		"Repeat": false,
-		"V-Offset": 25,
-		"Transparent" : " "
+	"Name": "The locomotive!",
+	"FPS": 25,
+	"Layers" : {
+		"0bg": {
+			"Z-Index": 0,
+			"Direction": 5,
+			"Speed": 2,
+			"Repeat": true,
+			"Transparent": " "
+		},
+		"1locomotive": {
+			"Z-Index": 1,
+			"Direction": 4,
+			"Speed": 3,
+			"V-Offset": 7,
+			"Repeat": false,
+			"Transparent": "x"
+		},
+		"2ground": {
+			"Z-Index": 2,
+			"Direction": 6,
+			"Speed": 1,
+			"V-Offset": 15,
+			"Repeat": true,
+			"Transparent": " "
+		},
+		"3schuuuschuu" : {
+			"Z-Index": 3,
+			"Direction": 6,
+			"Speed": 2,
+			"Repeat": false,
+			"V-Offset": 16,
+			"Transparent": " "
+		},
+		"4overlay": {
+			"Z-Index": 4,
+			"Direction": 0,
+			"Speed": 0,
+			"Repeat": false,
+			"V-Offset": 25,
+			"Transparent" : " "
+		}
 	}
-  }
 }
