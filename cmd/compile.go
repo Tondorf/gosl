@@ -28,9 +28,9 @@ var cmdCompile = &cobra.Command{
 It's contents contain at least:
 
   / leveldir
-     +-- Manifest.json        Basic level Info
-	 +-- Layer1/              At least one layer dir containing …
-	      +-- 1.Frame          At least one frame
+  +-- Manifest.json        Basic level Info
+  +-- Layer1/              At least one layer dir containing …
+      +-- 1.Frame          At least one frame
 
 See the example level for further details (which does not exist, yet :p)`,
 }

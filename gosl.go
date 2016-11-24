@@ -12,5 +12,9 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// let each cmd handle itself
-	cmd.Execute()
+  	cmd.Execute()
+
 }
+
+
+
