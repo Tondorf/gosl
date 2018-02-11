@@ -87,24 +87,25 @@ func serveClients() {
 			for _, k := range clientKeys {
 				id, client := k, clients[k]
 				if id > 0 {
-					oFrame := level.GetFrame(client.off, client.w, canvasX, frameCounter)
-					enc := gob.NewEncoder(client.con)
-					err := enc.Encode(oFrame)
-					if err != nil {
-						// client disconnected
-						//log.Println("BEFORE remove: clients:", clients, " clientKeys:", clientKeys)
-						// delete client
-						delete(clients, client.id)
-						// delete client key
-						// ugly as fuck in go to remove from a slice
-						// it *should* work though
-						idInKeys := sort.SearchInts(clientKeys, client.id)
-						clientKeys = append(clientKeys[:idInKeys], clientKeys[idInKeys+1:]...)
-						//log.Println("AFTER remove: clients:", clients, " clientKeys:", clientKeys)
-						resetServer()
-					}
-					//log.Println("ID:", id, "Client:", client)
-
+					go func() {
+						oFrame := level.GetFrame(client.off, client.w, canvasX, frameCounter)
+						enc := gob.NewEncoder(client.con)
+						err := enc.Encode(oFrame)
+						if err != nil {
+							// client disconnected
+							//log.Println("BEFORE remove: clients:", clients, " clientKeys:", clientKeys)
+							// delete client
+							delete(clients, client.id)
+							// delete client key
+							// ugly as fuck in go to remove from a slice
+							// it *should* work though
+							idInKeys := sort.SearchInts(clientKeys, client.id)
+							clientKeys = append(clientKeys[:idInKeys], clientKeys[idInKeys+1:]...)
+							//log.Println("AFTER remove: clients:", clients, " clientKeys:", clientKeys)
+							resetServer()
+						}
+						//log.Println("ID:", id, "Client:", client)
+					}()
 				}
 			}
 			frameCounter++

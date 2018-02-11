@@ -78,7 +78,8 @@ func runClient(cmd *cobra.Command, args []string) {
 		err = gd.Decode(&oFrame)
 		if err != nil {
 			log.Println("RGS:", err)
-			run = false
+			//run = false
+			continue
 		}
 		renderQueue <- oFrame
 
