@@ -1,0 +1,53 @@
+{
+	"Name": "Spaaace!",
+	"FPS": 25,
+	"Layers" : {
+		"0stars": {
+			"Z-Index": 0,
+			"Direction": 5,
+			"Speed": 1,
+			"Repeat": true,
+			"Transparent": " "
+		},
+		"1bigstar": {
+			"Z-Index": 0,
+			"Direction": 6,
+			"Speed": 1,
+			"V-Offset": 1,
+			"Repeat": false,
+			"Transparent": " "
+		},
+		"2smallstar": {
+			"Z-Index": 0,
+			"Direction": 4,
+			"Speed": 1,
+			"V-Offset": 15,
+			"Repeat": true,
+			"Transparent": " "
+		},
+		"3locomotive": {
+			"Z-Index": 1,
+			"Direction": 4,
+			"Speed": 2,
+			"V-Offset": 10,
+			"Repeat": false,
+			"Transparent": "x"
+		},
+		"4adult": {
+			"Z-Index": 2,
+			"Direction": 4,
+			"Speed": 1,
+			"V-Offset": 0,
+			"Repeat": true,
+			"Transparent": "."
+		},
+		"5spaaace" : {
+			"Z-Index": 3,
+			"Direction": 4,
+			"Speed": 2,
+			"Repeat": true,
+			"V-Offset": 25,
+			"Transparent": " "
+		}
+	}
+}
