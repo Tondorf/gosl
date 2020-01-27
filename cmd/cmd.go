@@ -1,8 +1,6 @@
-package cmd // code.bitsetter.de/fun/gosl/cmd
+package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
@@ -13,10 +11,4 @@ var CmdGosl = &cobra.Command{
 
 For further instructions run 'gosl help [command]'
 `,
-}
-
-func Execute() {
-	if err := CmdGosl.Execute(); err != nil {
-		os.Exit(-1)
-	}
 }

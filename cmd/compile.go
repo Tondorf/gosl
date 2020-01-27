@@ -1,4 +1,4 @@
-package cmd // code.bitsetter.de/fun/gosl/cmd
+package cmd
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"code.bitsetter.de/fun/gosl/data"
+	"github.com/Tondorf/gosl/data"
 )
 
 var (

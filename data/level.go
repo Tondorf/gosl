@@ -1,4 +1,4 @@
-package data // code.bitsetter.de/fun/gosl/data
+package data
 
 import (
 	"encoding/gob"

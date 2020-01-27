@@ -1,4 +1,4 @@
-package cmd // code.bitsetter.de/fun/gosl/cmd
+package cmd
 
 import (
 	"encoding/gob"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"code.bitsetter.de/fun/gosl/data"
+	"github.com/Tondorf/gosl/data"
 )
 
 var cmdServer = &cobra.Command{

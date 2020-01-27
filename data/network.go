@@ -1,4 +1,4 @@
-package data // code.bitsetter.de/fun/gosl/data
+package data
 
 import (
 	"strconv"
@@ -12,5 +12,5 @@ type Handshake struct {
 }
 
 func (h Handshake) String() string {
-	return (strconv.Itoa(h.ID) + ": " + strconv.Itoa(h.W) + "×" + strconv.Itoa(h.H))
+	return strconv.Itoa(h.ID) + ": " + strconv.Itoa(h.W) + "×" + strconv.Itoa(h.H)
 }
