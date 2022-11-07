@@ -19,6 +19,5 @@ gosl server -l locoworld.lvl
 
 ## Start of the client
 ```
-gosl client -H <REMOTE_HOST<#ID>
+gosl client -H <REMOTE_HOST> <#ID>
 ```
-
